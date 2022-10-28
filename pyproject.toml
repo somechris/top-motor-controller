@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "toy-motor-controller"
+version = "0.0.1-alpha.0"
+description = "Remote controller for motors in toys"
+authors = ["Christian Aistleitner <christian@quelltextlich.at>"]
+license = "AGPL-3.0-only"
+readme = "README.md"
+homepage = "https://github.com/somechris/hallo-eltern-cli"
+repository = "https://github.com/somechris/hallo-eltern-cli"
+keywords = ["toy", "remote control", "akogd"]
+classifiers = [
+  "Environment :: Console",
+  "Topic :: System :: Hardware :: Universal Serial Bus (USB) :: Wireless Controller",
+  ]
+
+[tool.poetry.dependencies]
+python = ">=3.6"
+dbus-python = "^1.2.16"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/somechris/toy-controller/issues"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

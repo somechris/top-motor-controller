@@ -2,6 +2,8 @@
 # GNU Affero General Public License v3.0 only (See LICENSE.txt)
 # SPDX-License-Identifier: AGPL-3.0-only
 
+from .. import __version__
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -27,3 +29,5 @@ __all__ = (
     PROPS_IFACE,
     InvalidArgsException,
     )
+
+__version__ = __version__

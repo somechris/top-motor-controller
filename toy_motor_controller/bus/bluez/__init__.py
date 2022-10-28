@@ -14,6 +14,7 @@ LE_ADVERTISING_MANAGER_IFACE = 'org.bluez.LEAdvertisingManager1'
 LE_ADVERTISEMENT_IFACE = 'org.bluez.LEAdvertisement1'
 
 from .advertisement_manager import AdvertisementManager
+from .characteristic import Characteristic
 
 ADVERTISEMENT_MANAGER = None
 
@@ -32,6 +33,7 @@ from .advertisement import Advertisement
 __all__ = (
     get_advertisement_manager,
     Advertisement,
+    Characteristic,
     )
 
 __version__ = __version__

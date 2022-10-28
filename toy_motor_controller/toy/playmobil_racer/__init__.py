@@ -2,12 +2,13 @@
 # GNU Affero General Public License v3.0 only (See LICENSE.txt)
 # SPDX-License-Identifier: AGPL-3.0-only
 
-import random
+from .. import __version__
+
+from .remote_control import PlaymobilRacerRemoteControl
 
 
-def randombyte():
-    return random.randrange(0, 256)
+__all__ = (
+    PlaymobilRacerRemoteControl,
+    )
 
-
-def clamped_int(value, minimum, maximum):
-    return min(max(int(value), minimum), maximum)
+__version__ = __version__

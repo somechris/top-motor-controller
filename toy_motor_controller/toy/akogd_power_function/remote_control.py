@@ -8,6 +8,9 @@ from toy_motor_controller.util import randombyte
 
 
 class AkogdPowerFunctionRemoteControl(Advertisement):
+
+    # -- Initialization ------------------------------------------------------
+
     def __init__(self):
         self._state = 1
         self._R = [randombyte() for i in range(3)]
@@ -17,15 +20,7 @@ class AkogdPowerFunctionRemoteControl(Advertisement):
         super(AkogdPowerFunctionRemoteControl, self).__init__()
         self._rebuild_data()
 
-    def _rebuild_data(self):
-        data = [0x67, self._state] + self._H + self._R + self._M + self._Z
-
-        checksum = 0xe9
-        for b in data:
-            checksum ^= b
-        data += [checksum]
-
-        self._set_manufacturer_data(data)
+    # -- Connection handling -------------------------------------------------
 
     def connected(self, H):
         self._state = 2
@@ -39,9 +34,25 @@ class AkogdPowerFunctionRemoteControl(Advertisement):
         self._M = [0 for i in range(4)]
         self._rebuild_data()
 
+    # -- Data sending --------------------------------------------------------
+
+    def _rebuild_data(self):
+        data = [0x67, self._state] + self._H + self._R + self._M + self._Z
+
+        checksum = 0xe9
+        for b in data:
+            checksum ^= b
+        data += [checksum]
+
+        self._set_manufacturer_data(data)
+
+    # -- Raw setter ----------------------------------------------------------
+
     def _set_port(self, port, value):
         self._M[port] = value
         self._rebuild_data()
+
+    # -- User setter ---------------------------------------------------------
 
     @uint8_standardized_control(
         'Port A (0=full speed counter-clockwise, 100=full speed clockwise)')
@@ -63,6 +74,8 @@ class AkogdPowerFunctionRemoteControl(Advertisement):
         'Port D (0=full speed counter-clockwise, 100=full speed clockwise)')
     def d(self, value):
         self._set_port(3, value)
+
+    # -- Utilities -----------------------------------------------------------
 
     def __str__(self):
         r = ''.join([f'{i:02x}' for i in self._R])

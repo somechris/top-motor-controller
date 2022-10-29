@@ -39,6 +39,8 @@ min_max_int_standardized_control = create_control_property(
 from .uint8_standardized_control import UInt8StandardizedControl
 uint8_standardized_control = create_control_property(UInt8StandardizedControl)
 
+from .resending_control import resending_control
+
 __all__ = (
     create_control_property,
     Control,
@@ -52,4 +54,5 @@ __all__ = (
     MinMaxIntStandardizedControl,
     uint8_standardized_control,
     UInt8StandardizedControl,
+    resending_control,
 )

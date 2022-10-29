@@ -1,0 +1,32 @@
+# This file is part of toy-motor-controller and licensed under the
+# GNU Affero General Public License v3.0 only (See LICENSE.txt)
+# SPDX-License-Identifier: AGPL-3.0-only
+
+import threading
+import time
+
+
+def resending_control(interval=1):
+    def initializer(setter):
+        _setter = setter
+        _instance = None
+        _value = None
+
+        def resender():
+            while True:
+                if _instance is not None:
+                    _setter(_instance, _value)
+                time.sleep(interval)
+
+        threading.Thread(target=resender, args=(), daemon=True).start()
+
+        def setter_and_updater(instance, value):
+            nonlocal _instance
+            nonlocal _value
+            _instance = instance
+            _value = value
+            print('inner', instance, value)
+            setter(instance, value)
+
+        return setter_and_updater
+    return initializer

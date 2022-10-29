@@ -5,6 +5,7 @@
 from toy_motor_controller.bus.bluez import Characteristic
 from toy_motor_controller.control import boolean_standardized_control
 from toy_motor_controller.control import min_max_int_standardized_control
+from toy_motor_controller.control import resending_control
 from toy_motor_controller.control import uint8_standardized_control
 from toy_motor_controller.util import clamped_int
 
@@ -54,6 +55,8 @@ class PlaymobilRacerRemoteControl(object):
 
     @uint8_standardized_control(
         'Speed (0=full speed backwards, 100=full speed forwards)')
+    # Set value holds only for ~0.3 seconds, so we need to resend before that.
+    @resending_control(interval=0.20)
     def speed(self, value):
         self._set_speed_motor(value)
 

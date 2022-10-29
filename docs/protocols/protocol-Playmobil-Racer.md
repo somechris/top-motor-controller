@@ -45,10 +45,11 @@ the car.
 
 ### Advertisements
 
-The advertisements of this protocol are done by the car, and have a local name
-(type `0x09`) starting in `PM-RC ` and characteristic
-`06d1e5e7-79ad-4a71-8faa-373789f7d93c`. Writing [commands](#commands) to this
-characteristic controls the car.
+The advertisements of this protocol are done by the car.
+They typically come from Bluetooth addresses starting in `AC:9A:22`, have a
+local name (type `0x09`) starting in `PM-RC `, and characteristic
+`06d1e5e7-79ad-4a71-8faa-373789f7d93c`.
+Writing [commands](#commands) to this characteristic controls the car.
 
 
 

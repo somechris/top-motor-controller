@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 
 from toy_motor_controller.bus.bluez import Advertisement
+from toy_motor_controller.control import uint8_standardized_control
 from toy_motor_controller.util import randombyte
 
 
@@ -38,9 +39,30 @@ class AkogdPowerFunctionRemoteControl(Advertisement):
         self._M = [0 for i in range(4)]
         self._rebuild_data()
 
-    def set_motors(self, M):
-        self._M = M
+    def _set_port(self, port, value):
+        self._M[port] = value
         self._rebuild_data()
+
+    @uint8_standardized_control(
+        'Port A (0=full speed counter-clockwise, 100=full speed clockwise)')
+    def a(self, value):
+        print('setting', value)
+        self._set_port(0, value)
+
+    @uint8_standardized_control(
+        'Port B (0=full speed counter-clockwise, 100=full speed clockwise)')
+    def b(self, value):
+        self._set_port(1, value)
+
+    @uint8_standardized_control(
+        'Port C (0=full speed counter-clockwise, 100=full speed clockwise)')
+    def c(self, value):
+        self._set_port(2, value)
+
+    @uint8_standardized_control(
+        'Port D (0=full speed counter-clockwise, 100=full speed clockwise)')
+    def d(self, value):
+        self._set_port(3, value)
 
     def __str__(self):
         r = ''.join([f'{i:02x}' for i in self._R])

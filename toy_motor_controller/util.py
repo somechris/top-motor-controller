@@ -9,5 +9,9 @@ def randombyte():
     return random.randrange(0, 256)
 
 
+def clamped(value, minimum, maximum):
+    return min(max(value, minimum), maximum)
+
+
 def clamped_int(value, minimum, maximum):
-    return min(max(int(value), minimum), maximum)
+    return clamped(int(value+0.5), minimum, maximum)

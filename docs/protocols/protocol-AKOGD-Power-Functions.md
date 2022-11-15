@@ -175,6 +175,9 @@ remote control that it wants input from.
 Once the remote control offers motor data in its advertisement, the hub shuts
 down its advertisement again.
 
+If the hub does not receive advertisements for ~2s, it sets all outputs to
+neutral.
+
 
 
 ## Source

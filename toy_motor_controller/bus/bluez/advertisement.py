@@ -33,6 +33,8 @@ class Advertisement(dbus.service.Object):
 
         properties = {
             'Type': dbus.String('peripheral'),
+            'MinInterval': dbus.UInt32(50),
+            'MaxInterval': dbus.UInt32(150),
             }
 
         if self._manufacturer_data is not None:

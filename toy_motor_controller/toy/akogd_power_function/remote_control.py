@@ -57,7 +57,6 @@ class AkogdPowerFunctionRemoteControl(Advertisement):
     @uint8_standardized_control(
         'Port A (0=full speed counter-clockwise, 100=full speed clockwise)')
     def a(self, value):
-        print('setting', value)
         self._set_port(0, value)
 
     @uint8_standardized_control(

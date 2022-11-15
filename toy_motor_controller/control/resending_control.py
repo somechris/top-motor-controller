@@ -25,7 +25,6 @@ def resending_control(interval=1):
             nonlocal _value
             _instance = instance
             _value = value
-            print('inner', instance, value)
             setter(instance, value)
 
         return setter_and_updater

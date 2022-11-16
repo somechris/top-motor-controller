@@ -23,8 +23,8 @@ def resending_control(interval=1):
         def setter_and_updater(instance, value):
             nonlocal _instance
             nonlocal _value
-            _instance = instance
             _value = value
+            _instance = instance
             setter(instance, value)
 
         return setter_and_updater

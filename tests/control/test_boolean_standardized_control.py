@@ -9,13 +9,13 @@ from toy_motor_controller.control import BooleanStandardizedControl
 from ..environment import BasicTestCase
 
 
-class BooleanStandardizedControlTestCase(BasicTestCase):
+class BooleanStandardizedControlTXstCase(BasicTestCase):
     def test_unintialized_get(self):
         setter = Mock()
 
         control = BooleanStandardizedControl(setter)
 
-        self.assertEqual(control.get(None), False)
+        self.assertEqual(control.get(None), 0)
         setter.assert_not_called()
 
     def test_intial_value_valid_get(self):
@@ -23,7 +23,7 @@ class BooleanStandardizedControlTestCase(BasicTestCase):
 
         control = BooleanStandardizedControl(setter, initial_value=True)
 
-        self.assertEqual(control.get(None), True)
+        self.assertEqual(control.get(None), 100)
         setter.assert_not_called()
 
     def test_intial_value_low_number(self):
@@ -31,7 +31,7 @@ class BooleanStandardizedControlTestCase(BasicTestCase):
 
         control = BooleanStandardizedControl(setter, initial_value=-5)
 
-        self.assertEqual(control.get(None), False)
+        self.assertEqual(control.get(None), 0)
         setter.assert_not_called()
 
     def test_intial_value_high_number(self):
@@ -39,7 +39,7 @@ class BooleanStandardizedControlTestCase(BasicTestCase):
 
         control = BooleanStandardizedControl(setter, initial_value=67)
 
-        self.assertEqual(control.get(None), True)
+        self.assertEqual(control.get(None), 100)
         setter.assert_not_called()
 
     def test_set_once(self):
@@ -47,66 +47,66 @@ class BooleanStandardizedControlTestCase(BasicTestCase):
 
         control = BooleanStandardizedControl(setter)
 
-        self.assertEqual(control.get(None), False)
+        self.assertEqual(control.get(None), 0)
 
         control.set(None, True)
 
         setter.assert_called_once_with(None, True)
-        self.assertEqual(control.get(None), True)
+        self.assertEqual(control.get(None), 100)
 
     def test_set_once_low_number(self):
         setter = Mock()
 
         control = BooleanStandardizedControl(setter)
 
-        self.assertEqual(control.get(None), False)
+        self.assertEqual(control.get(None), 0)
 
         control.set(None, 45)
 
         setter.assert_called_once_with(None, False)
-        self.assertEqual(control.get(None), False)
+        self.assertEqual(control.get(None), 0)
 
     def test_set_once_high_number(self):
         setter = Mock()
 
         control = BooleanStandardizedControl(setter)
 
-        self.assertEqual(control.get(None), False)
+        self.assertEqual(control.get(None), 0)
 
         control.set(None, 55)
 
         setter.assert_called_once_with(None, True)
-        self.assertEqual(control.get(None), True)
+        self.assertEqual(control.get(None), 100)
 
     def test_set_multiple_times(self):
         setter = Mock()
 
         control = BooleanStandardizedControl(setter)
 
-        self.assertEqual(control.get(None), False)
+        self.assertEqual(control.get(None), 0)
 
         control.set(None, True)
 
         setter.assert_called_once_with(None, True)
         setter.reset_mock()
-        self.assertEqual(control.get(None), True)
+        self.assertEqual(control.get(None), 100)
 
         control.set(None, False)
         setter.assert_called_once_with(None, False)
         setter.reset_mock()
-        self.assertEqual(control.get(None), False)
+        self.assertEqual(control.get(None), 0)
 
         control.set(None, True)
         setter.assert_called_once_with(None, True)
         setter.reset_mock()
-        self.assertEqual(control.get(None), True)
+        self.assertEqual(control.get(None), 100)
 
         control.set(None, 40)
         setter.assert_called_once_with(None, False)
         setter.reset_mock()
-        self.assertEqual(control.get(None), False)
+        self.assertEqual(control.get(None), 0)
 
         control.set(None, 60)
         setter.assert_called_once_with(None, True)
         setter.reset_mock()
-        self.assertEqual(control.get(None), True)
+        self.assertEqual(control.get(None), 100)

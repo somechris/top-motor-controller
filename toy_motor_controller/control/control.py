@@ -4,15 +4,22 @@
 
 class Control(object):
     def __init__(self, setter, initial_value=None):
-        self._value = initial_value
+        self._reported_value = self._convert_to_reported_value(initial_value)
         self._backend_setter = setter
 
     def get(self, instance):
-        return self._value
+        return self._reported_value
 
     def set(self, instance, value):
-        self._value = self._coerce_value(value)
-        self._backend_setter(instance, self._value)
+        self._reported_value = self._convert_to_reported_value(value)
 
-    def _coerce_value(self, value):
+        backend_value = self._convert_reported_to_backend_value(
+            self._reported_value)
+
+        self._backend_setter(instance, backend_value)
+
+    def _convert_to_reported_value(self, value):
+        return value
+
+    def _convert_reported_to_backend_value(self, value):
         return value

@@ -4,30 +4,22 @@
 
 from . import Control
 
-from toy_motor_controller.util import clamped_int
+from toy_motor_controller.util import clamped
 
 
 class StandardizedControl(Control):
-    def __init__(self, setter, initial_value=None):
+    def __init__(self, setter, initial_value=0):
         super(StandardizedControl, self).__init__(setter, initial_value)
-        self._value = \
-            self._coerce_value(initial_value if initial_value else 0)
 
-    def get(self, instance):
-        return self._value
+    def _convert_to_reported_value(self, value):
+        value = super(StandardizedControl, self)\
+            ._convert_to_reported_value(value)
 
-    def set(self, instance, value):
-        self._value = self._coerce_value(value)
-        self._backend_setter(instance, self._value)
-
-    def _coerce_standardized_value(self, value):
-        return value
-
-    def _coerce_value(self, value):
         if value is True:
             value = 100
         elif value is False:
             value = 0
-        else:
-            value = clamped_int(value, 0, 100)
-        return self._coerce_standardized_value(value)
+
+        value = clamped(value, 0, 100)
+
+        return value

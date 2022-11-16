@@ -42,22 +42,6 @@ class StandardizedControlTestCase(BasicTestCase):
         self.assertEqual(control.get(None), 100)
         setter.assert_not_called()
 
-    def test_intial_value_below_get(self):
-        setter = Mock()
-
-        control = StandardizedControl(setter, initial_value=-5)
-
-        self.assertEqual(control.get(None), 0)
-        setter.assert_not_called()
-
-    def test_intial_value_above_get(self):
-        setter = Mock()
-
-        control = StandardizedControl(setter, initial_value=200)
-
-        self.assertEqual(control.get(None), 100)
-        setter.assert_not_called()
-
     def test_intial_value_true_get(self):
         setter = Mock()
 
@@ -118,7 +102,6 @@ class StandardizedControlTestCase(BasicTestCase):
         self.assertEqual(control.get(None), 0)
 
         control.set(None, 42)
-
         setter.assert_called_once_with(None, 42)
         setter.reset_mock()
         self.assertEqual(control.get(None), 42)
@@ -126,6 +109,7 @@ class StandardizedControlTestCase(BasicTestCase):
         control.set(None, -10)
         setter.assert_called_once_with(None, 0)
         setter.reset_mock()
+        self.assertEqual(control.get(None), 0)
 
         control.set(None, 50)
         setter.assert_called_once_with(None, 50)

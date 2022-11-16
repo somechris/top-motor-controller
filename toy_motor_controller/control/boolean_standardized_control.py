@@ -6,5 +6,11 @@ from . import StandardizedControl
 
 
 class BooleanStandardizedControl(StandardizedControl):
-    def _coerce_standardized_value(self, value):
+    def _convert_to_reported_value(self, value):
+        value = super(BooleanStandardizedControl, self)\
+            ._convert_to_reported_value(value)
+
+        return 100 if value >= 50 else 0
+
+    def _convert_reported_to_backend_value(self, value):
         return value >= 50

@@ -54,6 +54,7 @@ class ControlTestCase(BasicTestCase):
         control.set(None, 23)
         setter.assert_called_once_with(None, 23)
         setter.reset_mock()
+        self.assertEqual(control.get(None), 23)
 
         control.set(None, 17)
         setter.assert_called_once_with(None, 17)

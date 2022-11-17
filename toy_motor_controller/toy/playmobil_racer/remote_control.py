@@ -24,7 +24,7 @@ class PlaymobilRacerRemoteControl(object):
 
     # -- Connection handling -------------------------------------------------
 
-    def connected(self, addr):
+    def connect(self, addr):
         self._remote_addr = addr
         self._characteristic = Characteristic(
             self._remote_addr, self.CHARACTERISTIC_UUID)

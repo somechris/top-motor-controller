@@ -22,13 +22,13 @@ class AkogdPowerFunctionRemoteControl(Advertisement):
 
     # -- Connection handling -------------------------------------------------
 
-    def connected(self, H):
+    def connect(self, H):
         self._state = 2
         self._H = H
         self._M = [0x80 for i in range(4)]
         self._rebuild_data()
 
-    def disconnected(self):
+    def disconnect(self):
         self._state = 1
         self._H = [0 for i in range(3)]
         self._M = [0 for i in range(4)]

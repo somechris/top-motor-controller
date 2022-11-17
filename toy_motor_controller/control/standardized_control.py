@@ -20,6 +20,6 @@ class StandardizedControl(Control):
         elif value is False:
             value = 0
 
-        value = clamped(value, 0, 100)
+        value = clamped(value, -100, 100)
 
         return value

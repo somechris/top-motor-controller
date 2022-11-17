@@ -34,12 +34,20 @@ class MinMaxIntStandardizedControlTestCase(BasicTestCase):
         self.assertEqual(control.get(None), 42)
         setter.assert_not_called()
 
-    def test_intial_value_too_low_get(self):
+    def test_intial_value_negative_get(self):
         setter = Mock()
 
         control = MinMaxIntStandardizedControl(setter, initial_value=-10)
 
-        self.assertEqual(control.get(None), 0)
+        self.assertEqual(control.get(None), -10)
+        setter.assert_not_called()
+
+    def test_intial_value_too_low_get(self):
+        setter = Mock()
+
+        control = MinMaxIntStandardizedControl(setter, initial_value=-210)
+
+        self.assertEqual(control.get(None), -100)
         setter.assert_not_called()
 
     def test_intial_value_too_high_get(self):
@@ -63,9 +71,9 @@ class MinMaxIntStandardizedControlTestCase(BasicTestCase):
         setter = Mock()
 
         control = MinMaxIntStandardizedControl(
-            setter, initial_value=-10, min=70, max=90)
+            setter, initial_value=-310, min=70, max=90)
 
-        self.assertEqual(control.get(None), 0)
+        self.assertEqual(control.get(None), -100)
         setter.assert_not_called()
 
     def test_intial_value_too_high_min_max_get(self):
@@ -86,7 +94,7 @@ class MinMaxIntStandardizedControlTestCase(BasicTestCase):
 
         control.set(None, 70)
 
-        setter.assert_called_once_with(None, 2400)
+        setter.assert_called_once_with(None, 2700)
         self.assertEqual(control.get(None), 70)
 
     def test_set_once_min_round_up(self):
@@ -96,10 +104,10 @@ class MinMaxIntStandardizedControlTestCase(BasicTestCase):
 
         self.assertEqual(control.get(None), 0)
 
-        control.set(None, 0)
+        control.set(None, -100)
 
         setter.assert_called_once_with(None, 11)
-        self.assertEqual(control.get(None), 0)
+        self.assertEqual(control.get(None), -100)
 
     def test_set_once_max_round_down(self):
         setter = Mock()
@@ -120,10 +128,10 @@ class MinMaxIntStandardizedControlTestCase(BasicTestCase):
 
         self.assertEqual(control.get(None), 0)
 
-        control.set(None, 0)
+        control.set(None, -100)
 
         setter.assert_called_once_with(None, 5)
-        self.assertEqual(control.get(None), 0)
+        self.assertEqual(control.get(None), -100)
 
     def test_min_coverage_high_end(self):
         setter = Mock()
@@ -132,10 +140,10 @@ class MinMaxIntStandardizedControlTestCase(BasicTestCase):
 
         self.assertEqual(control.get(None), 0)
 
-        control.set(None, 49)
+        control.set(None, -1)
 
         setter.assert_called_once_with(None, 5)
-        self.assertEqual(control.get(None), 49)
+        self.assertEqual(control.get(None), -1)
 
     def test_max_coverage_low_end(self):
         setter = Mock()
@@ -144,10 +152,10 @@ class MinMaxIntStandardizedControlTestCase(BasicTestCase):
 
         self.assertEqual(control.get(None), 0)
 
-        control.set(None, 50)
+        control.set(None, 0)
 
         setter.assert_called_once_with(None, 6)
-        self.assertEqual(control.get(None), 50)
+        self.assertEqual(control.get(None), 0)
 
     def test_max_coverage_high_end(self):
         setter = Mock()
@@ -164,7 +172,7 @@ class MinMaxIntStandardizedControlTestCase(BasicTestCase):
     def test_set_once_float(self):
         setter = Mock()
 
-        control = MinMaxIntStandardizedControl(setter, min=0, max=9)
+        control = MinMaxIntStandardizedControl(setter, min=-10, max=10)
 
         self.assertEqual(control.get(None), 0)
 
@@ -180,10 +188,10 @@ class MinMaxIntStandardizedControlTestCase(BasicTestCase):
 
         self.assertEqual(control.get(None), 0)
 
-        control.set(None, -10)
+        control.set(None, -120)
 
         setter.assert_called_once_with(None, 70)
-        self.assertEqual(control.get(None), 0)
+        self.assertEqual(control.get(None), -100)
 
     def test_set_once_too_high_number(self):
         setter = Mock()
@@ -200,32 +208,32 @@ class MinMaxIntStandardizedControlTestCase(BasicTestCase):
     def test_set_multiple_times(self):
         setter = Mock()
 
-        control = MinMaxIntStandardizedControl(setter, min=1000, max=2000)
+        control = MinMaxIntStandardizedControl(setter, min=1000, max=3000)
 
         self.assertEqual(control.get(None), 0)
 
         control.set(None, True)
 
-        setter.assert_called_once_with(None, 2000)
+        setter.assert_called_once_with(None, 3000)
         setter.reset_mock()
         self.assertEqual(control.get(None), 100)
 
         control.set(None, 43)
-        setter.assert_called_once_with(None, 1430)
+        setter.assert_called_once_with(None, 2430)
         setter.reset_mock()
         self.assertEqual(control.get(None), 43)
 
         control.set(None, 5000)
-        setter.assert_called_once_with(None, 2000)
+        setter.assert_called_once_with(None, 3000)
         setter.reset_mock()
         self.assertEqual(control.get(None), 100)
 
-        control.set(None, 40)
-        setter.assert_called_once_with(None, 1400)
+        control.set(None, -40)
+        setter.assert_called_once_with(None, 1600)
         setter.reset_mock()
-        self.assertEqual(control.get(None), 40)
+        self.assertEqual(control.get(None), -40)
 
         control.set(None, 60)
-        setter.assert_called_once_with(None, 1600)
+        setter.assert_called_once_with(None, 2600)
         setter.reset_mock()
         self.assertEqual(control.get(None), 60)

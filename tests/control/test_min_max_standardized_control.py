@@ -55,9 +55,9 @@ class MinMaxStandardizedControlTestCase(BasicTestCase):
         setter = Mock()
 
         control = MinMaxStandardizedControl(
-            setter, initial_value=-10, min=70, max=90)
+            setter, initial_value=-110, min=70, max=90)
 
-        self.assertEqual(control.get(None), 0)
+        self.assertEqual(control.get(None), -100)
         setter.assert_not_called()
 
     def test_intial_value_too_high_min_max_get(self):
@@ -78,13 +78,13 @@ class MinMaxStandardizedControlTestCase(BasicTestCase):
 
         control.set(None, 70)
 
-        setter.assert_called_once_with(None, 2400)
+        setter.assert_called_once_with(None, 2700)
         self.assertEqual(control.get(None), 70)
 
     def test_set_once_float_min_max(self):
         setter = Mock()
 
-        control = MinMaxStandardizedControl(setter, min=10, max=11)
+        control = MinMaxStandardizedControl(setter, min=9, max=11)
 
         self.assertEqual(control.get(None), 0)
 
@@ -93,7 +93,7 @@ class MinMaxStandardizedControlTestCase(BasicTestCase):
         setter.assert_called_once_with(None, 10.42)
         self.assertEqual(control.get(None), 42)
 
-    def test_set_once_too_low_number(self):
+    def test_set_once_negative(self):
         setter = Mock()
 
         control = MinMaxStandardizedControl(setter, min=70, max=90)
@@ -102,8 +102,20 @@ class MinMaxStandardizedControlTestCase(BasicTestCase):
 
         control.set(None, -10)
 
-        setter.assert_called_once_with(None, 70)
+        setter.assert_called_once_with(None, 79)
+        self.assertEqual(control.get(None), -10)
+
+    def test_set_once_too_low_number(self):
+        setter = Mock()
+
+        control = MinMaxStandardizedControl(setter, min=70, max=90)
+
         self.assertEqual(control.get(None), 0)
+
+        control.set(None, -110)
+
+        setter.assert_called_once_with(None, 70)
+        self.assertEqual(control.get(None), -100)
 
     def test_set_once_too_high_number(self):
         setter = Mock()
@@ -120,7 +132,7 @@ class MinMaxStandardizedControlTestCase(BasicTestCase):
     def test_set_multiple_times(self):
         setter = Mock()
 
-        control = MinMaxStandardizedControl(setter, min=1000, max=2000)
+        control = MinMaxStandardizedControl(setter, min=0, max=2000)
 
         self.assertEqual(control.get(None), 0)
 
@@ -140,10 +152,10 @@ class MinMaxStandardizedControlTestCase(BasicTestCase):
         setter.reset_mock()
         self.assertEqual(control.get(None), 100)
 
-        control.set(None, 40)
-        setter.assert_called_once_with(None, 1400)
+        control.set(None, -40)
+        setter.assert_called_once_with(None, 600)
         setter.reset_mock()
-        self.assertEqual(control.get(None), 40)
+        self.assertEqual(control.get(None), -40)
 
         control.set(None, 60)
         setter.assert_called_once_with(None, 1600)

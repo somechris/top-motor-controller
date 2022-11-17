@@ -26,12 +26,20 @@ class StandardizedControlTestCase(BasicTestCase):
         self.assertEqual(control.get(None), 42)
         setter.assert_not_called()
 
-    def test_intial_value_too_low_get(self):
+    def test_intial_value_negative_get(self):
         setter = Mock()
 
         control = StandardizedControl(setter, initial_value=-42)
 
-        self.assertEqual(control.get(None), 0)
+        self.assertEqual(control.get(None), -42)
+        setter.assert_not_called()
+
+    def test_intial_value_too_low_get(self):
+        setter = Mock()
+
+        control = StandardizedControl(setter, initial_value=-142)
+
+        self.assertEqual(control.get(None), -100)
         setter.assert_not_called()
 
     def test_intial_value_too_high_get(self):
@@ -70,17 +78,17 @@ class StandardizedControlTestCase(BasicTestCase):
         setter.assert_called_once_with(None, 42)
         self.assertEqual(control.get(None), 42)
 
-    def test_set_once_below(self):
+    def test_set_once_negative(self):
         setter = Mock()
 
         control = StandardizedControl(setter)
 
         self.assertEqual(control.get(None), 0)
 
-        control.set(None, -1)
+        control.set(None, -10)
 
-        setter.assert_called_once_with(None, 0)
-        self.assertEqual(control.get(None), 0)
+        setter.assert_called_once_with(None, -10)
+        self.assertEqual(control.get(None), -10)
 
     def test_set_once_above(self):
         setter = Mock()
@@ -93,6 +101,18 @@ class StandardizedControlTestCase(BasicTestCase):
 
         setter.assert_called_once_with(None, 100)
         self.assertEqual(control.get(None), 100)
+
+    def test_set_once_below(self):
+        setter = Mock()
+
+        control = StandardizedControl(setter)
+
+        self.assertEqual(control.get(None), 0)
+
+        control.set(None, -120)
+
+        setter.assert_called_once_with(None, -100)
+        self.assertEqual(control.get(None), -100)
 
     def test_set_multiple_times(self):
         setter = Mock()
@@ -107,9 +127,9 @@ class StandardizedControlTestCase(BasicTestCase):
         self.assertEqual(control.get(None), 42)
 
         control.set(None, -10)
-        setter.assert_called_once_with(None, 0)
+        setter.assert_called_once_with(None, -10)
         setter.reset_mock()
-        self.assertEqual(control.get(None), 0)
+        self.assertEqual(control.get(None), -10)
 
         control.set(None, 50)
         setter.assert_called_once_with(None, 50)

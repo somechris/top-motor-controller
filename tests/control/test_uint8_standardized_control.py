@@ -18,20 +18,28 @@ class UInt8StandardizedControlTestCase(BasicTestCase):
         self.assertEqual(control.get(None), 0)
         setter.assert_not_called()
 
-    def test_intial_value_too_low_get(self):
-        setter = Mock()
-
-        control = UInt8StandardizedControl(setter, initial_value=-10)
-
-        self.assertEqual(control.get(None), 0)
-        setter.assert_not_called()
-
     def test_intial_value_valid_get(self):
         setter = Mock()
 
         control = UInt8StandardizedControl(setter, initial_value=42)
 
         self.assertEqual(control.get(None), 42)
+        setter.assert_not_called()
+
+    def test_intial_value_valid_negative_get(self):
+        setter = Mock()
+
+        control = UInt8StandardizedControl(setter, initial_value=-42)
+
+        self.assertEqual(control.get(None), -42)
+        setter.assert_not_called()
+
+    def test_intial_value_too_low_get(self):
+        setter = Mock()
+
+        control = UInt8StandardizedControl(setter, initial_value=-210)
+
+        self.assertEqual(control.get(None), -100)
         setter.assert_not_called()
 
     def test_intial_value_too_high_get(self):
@@ -49,10 +57,10 @@ class UInt8StandardizedControlTestCase(BasicTestCase):
 
         self.assertEqual(control.get(None), 0)
 
-        control.set(None, 50)
+        control.set(None, 0)
 
         setter.assert_called_once_with(None, 128)
-        self.assertEqual(control.get(None), 50)
+        self.assertEqual(control.get(None), 0)
 
     def test_set_once_round_down(self):
         setter = Mock()
@@ -63,7 +71,7 @@ class UInt8StandardizedControlTestCase(BasicTestCase):
 
         control.set(None, 73)
 
-        setter.assert_called_once_with(None, 186)
+        setter.assert_called_once_with(None, 221)
         self.assertEqual(control.get(None), 73)
 
     def test_set_once_round_up(self):
@@ -75,7 +83,7 @@ class UInt8StandardizedControlTestCase(BasicTestCase):
 
         control.set(None, 74)
 
-        setter.assert_called_once_with(None, 189)
+        setter.assert_called_once_with(None, 222)
         self.assertEqual(control.get(None), 74)
 
     def test_set_once_too_low_number(self):
@@ -85,10 +93,10 @@ class UInt8StandardizedControlTestCase(BasicTestCase):
 
         self.assertEqual(control.get(None), 0)
 
-        control.set(None, -10)
+        control.set(None, -210)
 
         setter.assert_called_once_with(None, 0)
-        self.assertEqual(control.get(None), 0)
+        self.assertEqual(control.get(None), -100)
 
     def test_set_once_too_high_number(self):
         setter = Mock()
@@ -116,11 +124,11 @@ class UInt8StandardizedControlTestCase(BasicTestCase):
         self.assertEqual(control.get(None), 100)
 
         control.set(None, 10)
-        setter.assert_called_once_with(None, 25)
+        setter.assert_called_once_with(None, 140)
         setter.reset_mock()
         self.assertEqual(control.get(None), 10)
 
-        control.set(None, 20)
-        setter.assert_called_once_with(None, 51)
+        control.set(None, -20)
+        setter.assert_called_once_with(None, 102)
         setter.reset_mock()
-        self.assertEqual(control.get(None), 20)
+        self.assertEqual(control.get(None), -20)

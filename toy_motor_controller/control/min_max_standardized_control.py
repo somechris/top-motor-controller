@@ -13,4 +13,4 @@ class MinMaxStandardizedControl(StandardizedControl):
         self._span = max - min
 
     def _convert_reported_to_backend_value(self, value):
-        return self._min + (value * self._span) / 100
+        return self._min + ((value + 100) * self._span) / 200

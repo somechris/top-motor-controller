@@ -78,6 +78,18 @@ class BooleanStandardizedControlTXstCase(BasicTestCase):
         setter.assert_called_once_with(None, True)
         self.assertEqual(control.get(None), 100)
 
+    def test_set_once_negative_number(self):
+        setter = Mock()
+
+        control = BooleanStandardizedControl(setter)
+
+        self.assertEqual(control.get(None), 0)
+
+        control.set(None, -70)
+
+        setter.assert_called_once_with(None, False)
+        self.assertEqual(control.get(None), 0)
+
     def test_set_multiple_times(self):
         setter = Mock()
 

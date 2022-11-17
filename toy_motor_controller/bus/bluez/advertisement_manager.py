@@ -40,7 +40,7 @@ class AdvertisementManager():
 
         # Fetch address (which is only used for debugging)
         for key in ['Address', 'Name', 'Alias']:
-            value = adapter_props.Get(ADAPTER_IFACE, "Address")
+            value = adapter_props.Get(ADAPTER_IFACE, key)
             logger.debug(f'Bluetooth adapter has {key} {value}')
 
         self._manager = dbus.Interface(adapter, LE_ADVERTISING_MANAGER_IFACE)

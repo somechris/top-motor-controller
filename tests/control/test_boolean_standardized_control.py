@@ -31,7 +31,7 @@ class BooleanStandardizedControlTXstCase(BasicTestCase):
 
         control = BooleanStandardizedControl(setter, initial_value=-5)
 
-        self.assertEqual(control.get(None), 0)
+        self.assertEqual(control.get(None), -5)
         setter.assert_not_called()
 
     def test_intial_value_high_number(self):
@@ -39,7 +39,7 @@ class BooleanStandardizedControlTXstCase(BasicTestCase):
 
         control = BooleanStandardizedControl(setter, initial_value=67)
 
-        self.assertEqual(control.get(None), 100)
+        self.assertEqual(control.get(None), 67)
         setter.assert_not_called()
 
     def test_set_once(self):
@@ -64,7 +64,7 @@ class BooleanStandardizedControlTXstCase(BasicTestCase):
         control.set(None, 45)
 
         setter.assert_called_once_with(None, False)
-        self.assertEqual(control.get(None), 0)
+        self.assertEqual(control.get(None), 45)
 
     def test_set_once_high_number(self):
         setter = Mock()
@@ -76,7 +76,7 @@ class BooleanStandardizedControlTXstCase(BasicTestCase):
         control.set(None, 55)
 
         setter.assert_called_once_with(None, True)
-        self.assertEqual(control.get(None), 100)
+        self.assertEqual(control.get(None), 55)
 
     def test_set_once_negative_number(self):
         setter = Mock()
@@ -88,7 +88,7 @@ class BooleanStandardizedControlTXstCase(BasicTestCase):
         control.set(None, -70)
 
         setter.assert_called_once_with(None, False)
-        self.assertEqual(control.get(None), 0)
+        self.assertEqual(control.get(None), -70)
 
     def test_set_multiple_times(self):
         setter = Mock()
@@ -116,9 +116,9 @@ class BooleanStandardizedControlTXstCase(BasicTestCase):
         control.set(None, 40)
         setter.assert_called_once_with(None, False)
         setter.reset_mock()
-        self.assertEqual(control.get(None), 0)
+        self.assertEqual(control.get(None), 40)
 
         control.set(None, 60)
         setter.assert_called_once_with(None, True)
         setter.reset_mock()
-        self.assertEqual(control.get(None), 100)
+        self.assertEqual(control.get(None), 60)

@@ -27,13 +27,29 @@ def get_advertisement_manager():
     return ADVERTISEMENT_MANAGER
 
 
+from .scanned_advertisement import ScannedAdvertisement
+from .scanner import Scanner
+
+SCANNER = None
+
+
+def get_scanner():
+    global SCANNER
+    if SCANNER is None:
+        logger.debug('Creating singleton Scanner')
+        SCANNER = Scanner()
+    return SCANNER
+
+
 from .advertisement import Advertisement
 
 
 __all__ = (
     get_advertisement_manager,
+    get_scanner,
     Advertisement,
     Characteristic,
+    ScannedAdvertisement,
     )
 
 __version__ = __version__

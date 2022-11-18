@@ -4,4 +4,13 @@
 
 from .. import __version__
 
+from .akogd_power_function import AkogdPowerFunctionRemoteControl
+from .playmobil_racer import PlaymobilRacerRemoteControl
+
+
+__all__ = (
+    AkogdPowerFunctionRemoteControl,
+    PlaymobilRacerRemoteControl,
+)
+
 __version__ = __version__

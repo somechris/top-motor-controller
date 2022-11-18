@@ -22,6 +22,9 @@ PyGObject = "^3.42.2"
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
 
+[tool.poetry.scripts]
+toy-motor-controller-scanner = 'toy_motor_controller.scanner:main'
+
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/somechris/toy-controller/issues"
 

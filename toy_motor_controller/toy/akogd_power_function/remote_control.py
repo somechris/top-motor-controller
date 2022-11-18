@@ -2,7 +2,9 @@
 # GNU Affero General Public License v3.0 only (See LICENSE.txt)
 # SPDX-License-Identifier: AGPL-3.0-only
 
-from toy_motor_controller.bus.bluez import Advertisement
+import time
+
+from toy_motor_controller.bus.bluez import Advertisement, get_scanner
 from toy_motor_controller.control import uint8_standardized_control
 from toy_motor_controller.util import randombyte
 
@@ -21,8 +23,62 @@ class AkogdPowerFunctionRemoteControl(Advertisement):
         self._rebuild_data()
 
     # -- Connection handling -------------------------------------------------
+    def scan(self, first=False, best=False, duration=10):
+        matches_map = {}
+        needle = ''.join([f'{r:02x}' for r in self._R])
+        stop_time = (time.time() + duration) if duration is not None else 0
 
-    def connect(self, H):
+        def callback(advertisement):
+            m = advertisement.data.get('Manufacturer', '')
+            if len(m) == 42 and m.startswith('00006705'):
+                # It's a hub wanting to sync with some remote controller
+                if m[14:].startswith(needle):
+                    # It's a hub wanting to sync with us \o/
+                    H = []
+                    for offset in range(8, 8 + 2 * len(self._H), 2):
+                        H.append(int(m[offset:offset + 2], 16))
+                    matches_map[advertisement.address] = {
+                        'H': H,
+                        'supplement': {
+                            'advertisement': advertisement,
+                            }
+                        }
+
+        scanner = get_scanner()
+        scanner.register(callback)
+
+        while not (first and matches_map) and \
+                (not stop_time or time.time() < stop_time):
+            time.sleep(0.1)
+
+        scanner.unregister(callback)
+
+        matches = list(matches_map.values())
+        matches.sort(key=lambda x: -x['supplement']['advertisement'].rssi)
+
+        if first or best:
+            if matches:
+                ret = matches[0]
+            else:
+                ret = None
+        else:
+            ret = matches
+
+        return ret
+
+    def connectFirst(self):
+        scan_result = self.scan(first=True)
+        if scan_result is None:
+            raise RuntimeError('Failed to find connectable device')
+        self.connect(**scan_result)
+
+    def connectBest(self, duration=10):
+        scan_result = self.scan(best=True, duration=duration)
+        if scan_result is None:
+            raise RuntimeError('Failed to find connectable device')
+        self.connect(**scan_result)
+
+    def connect(self, H, supplement=None):
         self._state = 2
         self._H = H
         self._M = [0x80 for i in range(4)]

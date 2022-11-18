@@ -39,7 +39,7 @@ class AdvertisementManager():
         logger.debug('Bluetooth adapter is powered')
 
         # Fetch address (which is only used for debugging)
-        for key in ['Address', 'Name', 'Alias']:
+        for key in ['Address', 'AddressType', 'Name', 'Alias']:
             value = adapter_props.Get(ADAPTER_IFACE, key)
             logger.debug(f'Bluetooth adapter has {key} {value}')
 

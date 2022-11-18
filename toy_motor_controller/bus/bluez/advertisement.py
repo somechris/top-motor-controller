@@ -10,19 +10,29 @@ from . import LE_ADVERTISEMENT_IFACE
 
 
 class Advertisement(dbus.service.Object):
-    def __init__(self):
+    def __init__(self, advertise=True):
         super(Advertisement, self).__init__()
 
         self._manufacturer_data = None
 
         self._manager = get_advertisement_manager()
-        self._manager.republish(self)
+
+        self._manager.manage(self)
+
+        if advertise:
+            self.advertise(self)
+
+    def advertise(self):
+        self._manager.advertise(self)
+
+    def unadvertise(self):
+        self._manager.unadvertise(self)
 
     def _set_manufacturer_data(self, data):
         self._manufacturer_data = dbus.Dictionary({}, signature='qv')
         self._manufacturer_data[0xffff] = dbus.Array(data, signature='y')
 
-        self._manager.republish(self)
+        self._manager.update(self)
 
     @dbus.service.method(toy_motor_controller.bus.dbus.PROPS_IFACE,
                          in_signature='s',

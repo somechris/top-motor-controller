@@ -50,36 +50,49 @@ class AdvertisementManager():
         self._advertisements = {}
         logger.debug('AdvertisementManager is up and running')
 
-    def _manage(self, advertisement):
-        logger.debug(f'Starting to manage {advertisement}')
-        path = ADVERTISEMENT_BASE_PATH + str(len(self._advertisements.keys()))
-        self._dbus.init_object(advertisement, path)
-        adv_props = {
-            'path': path,
-            'lock': threading.Lock()
-            }
-        self._advertisements[advertisement] = adv_props
+    def manage(self, advertisement):
+        if advertisement not in self._advertisements:
+            logger.debug(f'Starting to manage {advertisement}')
+            path = ADVERTISEMENT_BASE_PATH \
+                + str(len(self._advertisements.keys()))
+            self._dbus.init_object(advertisement, path)
+            properties = {
+                'path': path,
+                'lock': threading.Lock(),
+                'advertised': False,
+                }
+            self._advertisements[advertisement] = properties
 
-        return adv_props
+    def unadvertise(self, advertisement):
+        properties = self._advertisements[advertisement]
+        if properties['advertised']:
+            with properties['lock']:
+                if properties['advertised']:
+                    self._unadvertise(properties)
 
-    def _unadvertise(self, adv_props):
-        path = adv_props['path']
-        try:
-            self._manager.UnregisterAdvertisement(path)
-        except dbus.exceptions.DBusException as e:
-            if e.get_dbus_name() == 'org.bluez.Error.DoesNotExist':
-                # The path was not published. So it was unpublished already
-                logger.debug(f'Unadvertized not existing path {path}')
+    def _unadvertise(self, properties):
+        path = properties['path']
+        logger.debug(f'Unadvertising {path}')
+        self._manager.UnregisterAdvertisement(path)
+        properties['advertised'] = False
+
+    def advertise(self, advertisement):
+        properties = self._advertisements[advertisement]
+        if not properties['advertised']:
+            properties['lock'].acquire()
+            if not properties['advertised']:
+                self._advertise(properties)
             else:
-                raise e
+                properties['lock'].release()
 
-    def _advertise(self, adv_props):
-        path = adv_props['path']
+    def _advertise(self, properties):
+        path = properties['path']
 
         def cleanup():
-            adv_props['lock'].release()
+            properties['lock'].release()
 
         def advertizing_worked():
+            properties['advertised'] = True
             logger.debug(f'Registering {path} done')
             cleanup()
 
@@ -92,22 +105,17 @@ class AdvertisementManager():
             reply_handler=advertizing_worked,
             error_handler=advertizing_failed)
 
-    def republish(self, advertisement):
-        logger.debug(f'Republishing {advertisement}')
-        try:
-            adv_props = self._advertisements[advertisement]
-        except KeyError:
-            adv_props = self._manage(advertisement)
+    def update(self, advertisement):
+        logger.debug(f'Updating {advertisement}')
 
-        path = adv_props['path']
-
-        adv_props['lock'].acquire()
-
-        logger.debug(f'  Unadvertising {path}')
-        self._unadvertise(adv_props)
-        logger.debug(f'  Advertising {path}')
-        self._advertise(adv_props)
-        logger.debug(f'Republishing {advertisement} done')
+        properties = self._advertisements[advertisement]
+        if properties['advertised']:
+            properties['lock'].acquire()
+            if properties['advertised']:
+                self._unadvertise(properties)
+                self._advertise(properties)
+            else:
+                properties['lock'].release()
 
     @property
     def address(self):

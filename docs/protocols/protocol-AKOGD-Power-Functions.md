@@ -169,7 +169,7 @@ Hubs seem to have a Bluetooth address of `C0:00:00:H3:H2:H1`. The
 address does not change.
 
 When a hub wants to flag that it is accepting input from a remote, the hub
-starts an advertisement with `STAT` `0x05`, and `R1`, `R2`, 'R3` from the
+starts an advertisement with `STAT` `0x05`, and `R1`, `R2`, `R3` from the
 remote control that it wants input from.
 
 Once the remote control offers motor data in its advertisement, the hub shuts

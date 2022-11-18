@@ -54,3 +54,19 @@ class Advertisement(dbus.service.Object):
                          out_signature='')
     def Release(self):
         pass
+
+    @property
+    def address(self):
+        return self._manager.address
+
+    @property
+    def address_type(self):
+        return self._manager.address_type
+
+    @property
+    def name(self):
+        return self._manager.name
+
+    @property
+    def alias(self):
+        return self._manager.alias

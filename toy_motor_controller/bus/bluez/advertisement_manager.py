@@ -38,10 +38,12 @@ class AdvertisementManager():
         adapter_props.Set(ADAPTER_IFACE, "Powered", dbus.Boolean(1))
         logger.debug('Bluetooth adapter is powered')
 
-        # Fetch address (which is only used for debugging)
+        # Fetch address
+        self._data = {}
         for key in ['Address', 'AddressType', 'Name', 'Alias']:
             value = adapter_props.Get(ADAPTER_IFACE, key)
             logger.debug(f'Bluetooth adapter has {key} {value}')
+            self._data[key] = value
 
         self._manager = dbus.Interface(adapter, LE_ADVERTISING_MANAGER_IFACE)
 
@@ -106,3 +108,19 @@ class AdvertisementManager():
         logger.debug(f'  Advertising {path}')
         self._advertise(adv_props)
         logger.debug(f'Republishing {advertisement} done')
+
+    @property
+    def address(self):
+        return self._data['Address']
+
+    @property
+    def address_type(self):
+        return self._data['AddressType']
+
+    @property
+    def name(self):
+        return self._data['Name']
+
+    @property
+    def alias(self):
+        return self._data['Alias']

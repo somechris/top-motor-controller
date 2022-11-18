@@ -70,13 +70,13 @@ class AkogdPowerFunctionRemoteControl(Advertisement):
         scan_result = self.scan(first=True)
         if scan_result is None:
             raise RuntimeError('Failed to find connectable device')
-        self.connect(**scan_result)
+        return self.connect(**scan_result)
 
     def connectBest(self, duration=10):
         scan_result = self.scan(best=True, duration=duration)
         if scan_result is None:
             raise RuntimeError('Failed to find connectable device')
-        self.connect(**scan_result)
+        return self.connect(**scan_result)
 
     def connect(self, H, supplement=None):
         self._state = 2
@@ -84,11 +84,15 @@ class AkogdPowerFunctionRemoteControl(Advertisement):
         self._M = [0x80 for i in range(4)]
         self._rebuild_data()
 
+        return self
+
     def disconnect(self):
         self._state = 1
         self._H = [0 for i in range(3)]
         self._M = [0 for i in range(4)]
         self._rebuild_data()
+
+        return self
 
     # -- Data sending --------------------------------------------------------
 

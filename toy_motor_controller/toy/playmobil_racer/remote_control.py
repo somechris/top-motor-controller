@@ -29,6 +29,8 @@ class PlaymobilRacerRemoteControl(object):
         self._characteristic = Characteristic(
             self._remote_addr, self.CHARACTERISTIC_UUID)
 
+        return self
+
     # -- Data sending --------------------------------------------------------
 
     def _send_command(self, key, value):

@@ -19,20 +19,20 @@ class PlaymobilRacerRemoteControl(object):
     # -- Initialization ------------------------------------------------------
 
     def __init__(self):
-        self._remote_addr = None
+        self._remote_address = None
         self._characteristic = None
 
     # -- Connection handling -------------------------------------------------
 
-    def connect(self, addr):
-        self._remote_addr = addr
+    def connect(self, address):
+        self._remote_address = address
         self._characteristic = Characteristic(
-            self._remote_addr, self.CHARACTERISTIC_UUID)
+            self._remote_address, self.CHARACTERISTIC_UUID)
 
         return self
 
     def disconnect(self):
-        self._remote_addr = None
+        self._remote_address = None
         self._characteristic = None
 
         return self
@@ -84,8 +84,8 @@ class PlaymobilRacerRemoteControl(object):
     # -- Utilities -----------------------------------------------------------
 
     def __str__(self):
-        if self._remote_addr:
-            extra = self._remote_addr
+        if self._remote_address:
+            extra = self._remote_address
         else:
             extra = '<unconnected>'
         return f'PlaymobilRacerRemoteControl({extra})'

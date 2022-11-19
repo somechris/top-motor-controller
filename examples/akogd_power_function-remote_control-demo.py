@@ -11,10 +11,10 @@ from toy_motor_controller.toy import AkogdPowerFunctionRemoteControl
 print('Starting toy-motor-controller')
 toy_motor_controller.start()
 
-print('Connecting to first found device')
+print('Searching for connectable AKOGD Power Function hubs ...')
 device = AkogdPowerFunctionRemoteControl().connectFirst()
 
-print(f'Connected to {device}')
+print(f'Device found, connection established: {device}')
 
 print('Full speed on all outputs for 2 seconds')
 device.a = 100
@@ -30,8 +30,6 @@ device.c = 0
 device.d = 0
 time.sleep(1)
 
-print('Disconnecting device')
+print('Cleaning up')
 device.disconnect()
-
-print('Stopping toy-motor-controller')
 toy_motor_controller.stop()

@@ -7,6 +7,7 @@ from .environment import BasicTestCase
 from toy_motor_controller.util import \
     randombyte, \
     bytes_to_hex_string, \
+    hex_string_to_bytes, \
     clamped, \
     clamped_int
 
@@ -39,6 +40,30 @@ class ControlTestCase(BasicTestCase):
     def test_bytes_to_hex_string_multiple_connector(self):
         actual = bytes_to_hex_string([0xf0, 0x0b, 0xa4], connector='__')
         self.assertEqual(actual, 'f0__0b__a4')
+
+    def test_hex_string_to_bytes_empty(self):
+        actual = hex_string_to_bytes('')
+        self.assertEqual(actual, [])
+
+    def test_hex_string_to_bytes_single_char_low(self):
+        actual = hex_string_to_bytes('5')
+        self.assertEqual(actual, [0x05])
+
+    def test_hex_string_to_bytes_single_char_high(self):
+        actual = hex_string_to_bytes('e')
+        self.assertEqual(actual, [0x0e])
+
+    def test_hex_string_to_bytes_single_byte(self):
+        actual = hex_string_to_bytes('a8')
+        self.assertEqual(actual, [0xa8])
+
+    def test_hex_string_to_bytes_multiple_bytes(self):
+        actual = hex_string_to_bytes('a84011')
+        self.assertEqual(actual, [0xa8, 0x40, 0x11])
+
+    def test_hex_string_to_bytes_multiple_bytes_uneven(self):
+        actual = hex_string_to_bytes('a840113')
+        self.assertEqual(actual, [0x0a, 0x84, 0x01, 0x13])
 
     def test_clamped_between(self):
         actual = clamped(30.5, 10.4, 87)

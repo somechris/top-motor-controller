@@ -13,6 +13,15 @@ def bytes_to_hex_string(bytes=[], connector=''):
     return connector.join([f'{byte:02x}' for byte in bytes])
 
 
+def hex_string_to_bytes(hex_string):
+    ret = []
+    if len(hex_string) % 2 == 1:
+        hex_string = '0' + hex_string
+    for offset in range(0, len(hex_string), 2):
+        ret.append(int(hex_string[offset:offset+2], 16))
+    return ret
+
+
 def clamped(value, minimum, maximum):
     return min(max(value, minimum), maximum)
 

@@ -6,7 +6,8 @@ import time
 
 from toy_motor_controller.bus.bluez import Advertisement, get_scanner
 from toy_motor_controller.control import uint8_standardized_control
-from toy_motor_controller.util import randombyte, bytes_to_hex_string
+from toy_motor_controller.util import randombyte, bytes_to_hex_string, \
+    hex_string_to_bytes
 
 
 class AkogdPowerFunctionRemoteControl(Advertisement):
@@ -36,9 +37,7 @@ class AkogdPowerFunctionRemoteControl(Advertisement):
                 # It's a hub wanting to sync with some remote controller
                 if m[14:].startswith(needle):
                     # It's a hub wanting to sync with us \o/
-                    H = []
-                    for offset in range(8, 8 + 2 * len(self._H), 2):
-                        H.append(int(m[offset:offset + 2], 16))
+                    H = hex_string_to_bytes(m[8:14])
                     matches_map[advertisement.address] = {
                         'H': H,
                         'supplement': {

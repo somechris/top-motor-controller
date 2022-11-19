@@ -6,7 +6,7 @@ import time
 
 from toy_motor_controller.bus.bluez import Advertisement, get_scanner
 from toy_motor_controller.control import uint8_standardized_control
-from toy_motor_controller.util import randombyte
+from toy_motor_controller.util import randombyte, bytes_to_hex_string
 
 
 class AkogdPowerFunctionRemoteControl(Advertisement):
@@ -15,7 +15,7 @@ class AkogdPowerFunctionRemoteControl(Advertisement):
 
     def __init__(self):
         self._magic = [0x00, 0x00, 0x67]
-        self._magic_str = ''.join([f'{b:02x}' for b in self._magic])
+        self._magic_str = bytes_to_hex_string(self._magic)
         self._state = 1
         self._R = [randombyte() for i in range(3)]
         self._H = [0 for i in range(3)]
@@ -27,7 +27,7 @@ class AkogdPowerFunctionRemoteControl(Advertisement):
     # -- Connection handling -------------------------------------------------
     def scan(self, first=False, best=False, duration=10):
         matches_map = {}
-        needle = ''.join([f'{r:02x}' for r in self._R])
+        needle = bytes_to_hex_string(self._R)
         stop_time = (time.time() + duration) if duration is not None else 0
 
         def callback(advertisement):
@@ -140,10 +140,10 @@ class AkogdPowerFunctionRemoteControl(Advertisement):
     # -- Utilities -----------------------------------------------------------
 
     def __str__(self):
-        r = ''.join([f'{i:02x}' for i in self._R])
+        r = bytes_to_hex_string(self._R)
         if self._state & 0x02:
-            h = ''.join([f'{i:02x}' for i in self._H])
-            m = ','.join([f'{i:02x}' for i in self._M])
+            h = bytes_to_hex_string(self._H)
+            m = bytes_to_hex_string(self._M, connector=',')
             extra = f'connected, hub: {h}, motors: {m}'
         else:
             extra = 'unconnected'

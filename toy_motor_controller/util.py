@@ -9,6 +9,10 @@ def randombyte():
     return random.randrange(0, 256)
 
 
+def bytes_to_hex_string(bytes=[], connector=''):
+    return connector.join([f'{byte:02x}' for byte in bytes])
+
+
 def clamped(value, minimum, maximum):
     return min(max(value, minimum), maximum)
 

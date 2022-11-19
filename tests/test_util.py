@@ -4,7 +4,11 @@
 
 from .environment import BasicTestCase
 
-from toy_motor_controller.util import randombyte, clamped, clamped_int
+from toy_motor_controller.util import \
+    randombyte, \
+    bytes_to_hex_string, \
+    clamped, \
+    clamped_int
 
 
 class ControlTestCase(BasicTestCase):
@@ -15,6 +19,26 @@ class ControlTestCase(BasicTestCase):
     def test_random_byte_crude_randomness(self):
         numbers = [randombyte() for _ in range(20)]
         self.assertGreater(len(numbers), 15)
+
+    def test_bytes_to_hex_string_empty(self):
+        actual = bytes_to_hex_string([])
+        self.assertEqual(actual, '')
+
+    def test_bytes_to_hex_string_single_small(self):
+        actual = bytes_to_hex_string([0xc])
+        self.assertEqual(actual, '0c')
+
+    def test_bytes_to_hex_string_single_big(self):
+        actual = bytes_to_hex_string([0xfa])
+        self.assertEqual(actual, 'fa')
+
+    def test_bytes_to_hex_string_multiple(self):
+        actual = bytes_to_hex_string([0xf0, 0x0b, 0xa4])
+        self.assertEqual(actual, 'f00ba4')
+
+    def test_bytes_to_hex_string_multiple_connector(self):
+        actual = bytes_to_hex_string([0xf0, 0x0b, 0xa4], connector='__')
+        self.assertEqual(actual, 'f0__0b__a4')
 
     def test_clamped_between(self):
         actual = clamped(30.5, 10.4, 87)

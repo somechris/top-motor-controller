@@ -28,7 +28,7 @@ class Scanner(object):
             if has_callbacks:
                 if not had_callbacks:
                     logger.debug('Starting scanner')
-                    self._scanner.start()
+                    self._scanner.start(passive=True)
 
                 self._scanner.process(timeout=3)
             else:

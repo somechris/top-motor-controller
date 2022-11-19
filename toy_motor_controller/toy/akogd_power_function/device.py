@@ -15,7 +15,7 @@ class AkogdPowerFunctionDevice(Advertisement):
     def __init__(self):
         self._magic = [0x00, 0x00, 0x67]
         self._magic_str = bytes_to_hex_string(self._magic)
-        self._state = 0
+        self._connection_state = 0
         self._H = [0 for i in range(3)]
         self._R = [0 for i in range(3)]
         self._M = [0 for i in range(4)]
@@ -83,8 +83,8 @@ class AkogdPowerFunctionDevice(Advertisement):
     # -- Data sending --------------------------------------------------------
 
     def _rebuild_data(self):
-        data = self._magic + [self._state] + self._H + self._R + self._M \
-            + self._Z
+        data = self._magic + [self._connection_state] + self._H + self._R \
+            + self._M + self._Z
 
         checksum = 0xe9
         for b in data:
@@ -96,7 +96,7 @@ class AkogdPowerFunctionDevice(Advertisement):
     # -- Utilities -----------------------------------------------------------
 
     def __str__(self):
-        s = bytes_to_hex_string([self._state])
+        s = bytes_to_hex_string([self._connection_state])
         h = bytes_to_hex_string(self._H)
         r = bytes_to_hex_string(self._R)
         m = bytes_to_hex_string(self._M, connector=',')

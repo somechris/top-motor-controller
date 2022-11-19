@@ -15,7 +15,7 @@ class AkogdPowerFunctionRemoteControl(AkogdPowerFunctionDevice):
 
     def __init__(self):
         super(AkogdPowerFunctionRemoteControl, self).__init__()
-        self._state = 1
+        self._connection_state = 1
         self._R = [randombyte() for i in range(3)]
         self._rebuild_data()
         self.advertise()
@@ -41,14 +41,14 @@ class AkogdPowerFunctionRemoteControl(AkogdPowerFunctionDevice):
         return callback
 
     def connect(self, H, supplement=None):
-        self._state = 2
+        self._connection_state = 2
         self._H = H
         self._M = [0x80 for i in range(4)]
 
         return super(AkogdPowerFunctionRemoteControl, self).connect()
 
     def disconnect(self):
-        self._state = 1
+        self._connection_state = 1
         self._H = [0 for i in range(3)]
         self._M = [0 for i in range(4)]
         self._rebuild_data()

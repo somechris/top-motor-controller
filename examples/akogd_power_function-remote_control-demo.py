@@ -17,17 +17,17 @@ device = AkogdPowerFunctionRemoteControl().connectFirst()
 print(f'Device found, connection established: {device}')
 
 print('Full speed on all outputs for 2 seconds')
-device.a = 100
-device.b = 100
-device.c = 100
-device.d = 100
+device.A = 100
+device.B = 100
+device.C = 100
+device.D = 100
 time.sleep(2)
 
 print('Stopping all outputs')
-device.a = 0
-device.b = 0
-device.c = 0
-device.d = 0
+device.A = 0
+device.B = 0
+device.C = 0
+device.D = 0
 time.sleep(1)
 
 print('Cleaning up')

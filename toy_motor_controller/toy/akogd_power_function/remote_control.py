@@ -65,20 +65,20 @@ class AkogdPowerFunctionRemoteControl(AkogdPowerFunctionDevice):
 
     @uint8_standardized_control(
         'Port A (0=full speed counter-clockwise, 100=full speed clockwise)')
-    def a(self, value):
+    def A(self, value):
         self._set_port(0, value)
 
     @uint8_standardized_control(
         'Port B (0=full speed counter-clockwise, 100=full speed clockwise)')
-    def b(self, value):
+    def B(self, value):
         self._set_port(1, value)
 
     @uint8_standardized_control(
         'Port C (0=full speed counter-clockwise, 100=full speed clockwise)')
-    def c(self, value):
+    def C(self, value):
         self._set_port(2, value)
 
     @uint8_standardized_control(
         'Port D (0=full speed counter-clockwise, 100=full speed clockwise)')
-    def d(self, value):
+    def D(self, value):
         self._set_port(3, value)

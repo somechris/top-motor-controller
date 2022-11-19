@@ -11,7 +11,7 @@ from . import LE_ADVERTISEMENT_IFACE
 
 class Advertisement(dbus.service.Object):
     def __init__(self, advertise=True):
-        super(Advertisement, self).__init__()
+        super().__init__()
 
         self._manufacturer_data = None
 

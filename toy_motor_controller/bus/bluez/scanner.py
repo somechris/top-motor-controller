@@ -53,7 +53,7 @@ class Scanner(object):
 
     class Delegate(btle.DefaultDelegate):
         def __init__(self, scanner):
-            super(btle.DefaultDelegate, self).__init__()
+            super().__init__()
             self._scanner = scanner
 
         def handleDiscovery(self, scanEntry, isNewDev, isNewData):

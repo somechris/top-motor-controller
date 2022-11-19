@@ -9,11 +9,10 @@ from toy_motor_controller.util import clamped
 
 class StandardizedControl(Control):
     def __init__(self, setter, initial_value=0):
-        super(StandardizedControl, self).__init__(setter, initial_value)
+        super().__init__(setter, initial_value)
 
     def _convert_to_reported_value(self, value):
-        value = super(StandardizedControl, self)\
-            ._convert_to_reported_value(value)
+        value = super()._convert_to_reported_value(value)
 
         if value is True:
             value = 100

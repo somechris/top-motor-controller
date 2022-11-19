@@ -7,7 +7,7 @@ from . import StandardizedControl
 
 class MinMaxStandardizedControl(StandardizedControl):
     def __init__(self, setter, initial_value=0, min=0, max=100):
-        super(MinMaxStandardizedControl, self).__init__(setter, initial_value)
+        super().__init__(setter, initial_value)
 
         self._min = min
         self._span = max - min

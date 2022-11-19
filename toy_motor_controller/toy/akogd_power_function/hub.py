@@ -13,7 +13,7 @@ class AkogdPowerFunctionHub(AkogdPowerFunctionDevice):
     # -- Initialization ------------------------------------------------------
 
     def __init__(self):
-        super(AkogdPowerFunctionHub, self).__init__()
+        super().__init__()
         self._H = [randombyte() for i in range(3)]
         self._M[0] = 0x80
         self._rebuild_data()
@@ -45,7 +45,7 @@ class AkogdPowerFunctionHub(AkogdPowerFunctionDevice):
         self._R = R
         self._reset_state()
 
-        super(AkogdPowerFunctionHub, self).connect()
+        super().connect()
 
         self._expected_advertisement_starts = [
             bytes_to_hex_string(self._magic + [0x02] + self._H + self._R),
@@ -66,7 +66,7 @@ class AkogdPowerFunctionHub(AkogdPowerFunctionDevice):
         self._R = [0 for i in range(3)]
         self._reset_state()
 
-        return super(AkogdPowerFunctionHub, self).disconnect()
+        return super().disconnect()
 
     # -- Data handling -------------------------------------------------------
 

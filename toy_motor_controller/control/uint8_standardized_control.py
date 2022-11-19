@@ -7,5 +7,4 @@ from . import MinMaxIntStandardizedControl
 
 class UInt8StandardizedControl(MinMaxIntStandardizedControl):
     def __init__(self, setter, initial_value=0):
-        super(UInt8StandardizedControl, self).__init__(
-            setter, initial_value, min=0, max=255)
+        super().__init__(setter, initial_value, min=0, max=255)

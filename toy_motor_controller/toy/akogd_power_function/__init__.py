@@ -5,11 +5,13 @@
 from .. import __version__
 
 from .device import AkogdPowerFunctionDevice
+from .hub import AkogdPowerFunctionHub
 from .remote_control import AkogdPowerFunctionRemoteControl
 
 
 __all__ = (
     AkogdPowerFunctionDevice,
+    AkogdPowerFunctionHub,
     AkogdPowerFunctionRemoteControl,
     )
 

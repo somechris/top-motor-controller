@@ -31,6 +31,12 @@ class PlaymobilRacerRemoteControl(object):
 
         return self
 
+    def disconnect(self):
+        self._remote_addr = None
+        self._characteristic = None
+
+        return self
+
     # -- Data sending --------------------------------------------------------
 
     def _send_command(self, key, value):

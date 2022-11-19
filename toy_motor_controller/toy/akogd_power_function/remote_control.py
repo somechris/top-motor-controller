@@ -97,7 +97,8 @@ class AkogdPowerFunctionRemoteControl(Advertisement):
     # -- Data sending --------------------------------------------------------
 
     def _rebuild_data(self):
-        data = [0x67, self._state] + self._H + self._R + self._M + self._Z
+        data = [0x00, 0x00, 0x67, self._state] + self._H + self._R + self._M \
+            + self._Z
 
         checksum = 0xe9
         for b in data:

@@ -30,7 +30,10 @@ class Advertisement(dbus.service.Object):
 
     def _set_manufacturer_data(self, data):
         self._manufacturer_data = dbus.Dictionary({}, signature='qv')
-        self._manufacturer_data[0xffff] = dbus.Array(data, signature='y')
+        if data and len(data) >= 2:
+            company_id = (data[1] << 8) + data[0]
+            company_data = dbus.Array(data[2:], signature='y')
+            self._manufacturer_data[company_id] = company_data
 
         self._manager.update(self)
 

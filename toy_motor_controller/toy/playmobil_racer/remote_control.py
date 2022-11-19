@@ -7,35 +7,56 @@ from toy_motor_controller.control import boolean_standardized_control
 from toy_motor_controller.control import min_max_int_standardized_control
 from toy_motor_controller.control import resending_control
 from toy_motor_controller.control import uint8_standardized_control
+from toy_motor_controller.toy.common import BluetoothAdvertisementDiscovery
 from toy_motor_controller.util import clamped_int
 
 import logging
 logger = logging.getLogger(__name__)
 
 
-class PlaymobilRacerRemoteControl(object):
+class PlaymobilRacerRemoteControl(BluetoothAdvertisementDiscovery):
     CHARACTERISTIC_UUID = '06d1e5e7-79ad-4a71-8faa-373789f7d93c'
 
     # -- Initialization ------------------------------------------------------
 
     def __init__(self):
+        super().__init__()
         self._remote_address = None
         self._characteristic = None
 
     # -- Connection handling -------------------------------------------------
 
-    def connect(self, address):
+    def _get_scanning_callback(self, matches_map):
+        def callback(advertisement):
+            name = advertisement.data.get('Complete Local Name', '')
+            if name.startswith('PM-RC ') and advertisement.connectable:
+                # It looks like a suitable car. Active scans, we could also
+                # contain:
+                #    'Complete 128b Services':
+                #         'bc2f4cc6-aaef-4351-9034-d66268e328f0'
+                # in their data. But we're doing passive scans, so we do not
+                # see that.
+                matches_map[advertisement.address] = {
+                    'address': advertisement.address,
+                    'supplement': {
+                        'advertisement': advertisement,
+                        }
+                    }
+
+        return callback
+
+    def connect(self, address, supplement=None):
         self._remote_address = address
         self._characteristic = Characteristic(
             self._remote_address, self.CHARACTERISTIC_UUID)
 
-        return self
+        return super().connect()
 
     def disconnect(self):
         self._remote_address = None
         self._characteristic = None
 
-        return self
+        return super().disconnect()
 
     # -- Data sending --------------------------------------------------------
 

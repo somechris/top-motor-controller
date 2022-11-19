@@ -2,34 +2,28 @@
 # GNU Affero General Public License v3.0 only (See LICENSE.txt)
 # SPDX-License-Identifier: AGPL-3.0-only
 
-import time
-
-from toy_motor_controller.bus.bluez import Advertisement, get_scanner
 from toy_motor_controller.control import uint8_standardized_control
 from toy_motor_controller.util import randombyte, bytes_to_hex_string, \
     hex_string_to_bytes
 
+from . import AkogdPowerFunctionDevice
 
-class AkogdPowerFunctionRemoteControl(Advertisement):
+
+class AkogdPowerFunctionRemoteControl(AkogdPowerFunctionDevice):
 
     # -- Initialization ------------------------------------------------------
 
     def __init__(self):
-        self._magic = [0x00, 0x00, 0x67]
-        self._magic_str = bytes_to_hex_string(self._magic)
+        super(AkogdPowerFunctionRemoteControl, self).__init__()
         self._state = 1
         self._R = [randombyte() for i in range(3)]
-        self._H = [0 for i in range(3)]
-        self._M = [0 for i in range(4)]
-        self._Z = [0 for i in range(6)]
-        super(AkogdPowerFunctionRemoteControl, self).__init__()
         self._rebuild_data()
+        self.advertise()
 
     # -- Connection handling -------------------------------------------------
-    def scan(self, first=False, best=False, duration=10):
-        matches_map = {}
+
+    def _get_scanning_callback(self, matches_map):
         needle = bytes_to_hex_string(self._R)
-        stop_time = (time.time() + duration) if duration is not None else 0
 
         def callback(advertisement):
             m = advertisement.data.get('Manufacturer', '')
@@ -44,48 +38,14 @@ class AkogdPowerFunctionRemoteControl(Advertisement):
                             'advertisement': advertisement,
                             }
                         }
-
-        scanner = get_scanner()
-        scanner.register(callback)
-
-        while not (first and matches_map) and \
-                (not stop_time or time.time() < stop_time):
-            time.sleep(0.1)
-
-        scanner.unregister(callback)
-
-        matches = list(matches_map.values())
-        matches.sort(key=lambda x: -x['supplement']['advertisement'].rssi)
-
-        if first or best:
-            if matches:
-                ret = matches[0]
-            else:
-                ret = None
-        else:
-            ret = matches
-
-        return ret
-
-    def connectFirst(self):
-        scan_result = self.scan(first=True)
-        if scan_result is None:
-            raise RuntimeError('Failed to find connectable device')
-        return self.connect(**scan_result)
-
-    def connectBest(self, duration=10):
-        scan_result = self.scan(best=True, duration=duration)
-        if scan_result is None:
-            raise RuntimeError('Failed to find connectable device')
-        return self.connect(**scan_result)
+        return callback
 
     def connect(self, H, supplement=None):
         self._state = 2
         self._H = H
         self._M = [0x80 for i in range(4)]
-        self._rebuild_data()
 
-        return self
+        return super(AkogdPowerFunctionRemoteControl, self).connect()
 
     def disconnect(self):
         self._state = 1
@@ -93,20 +53,7 @@ class AkogdPowerFunctionRemoteControl(Advertisement):
         self._M = [0 for i in range(4)]
         self._rebuild_data()
 
-        return self
-
-    # -- Data sending --------------------------------------------------------
-
-    def _rebuild_data(self):
-        data = self._magic + [self._state] + self._H + self._R + self._M \
-            + self._Z
-
-        checksum = 0xe9
-        for b in data:
-            checksum ^= b
-        data += [checksum]
-
-        self._set_manufacturer_data(data)
+        return super(AkogdPowerFunctionRemoteControl, self).disconnect()
 
     # -- Raw setter ----------------------------------------------------------
 
@@ -135,15 +82,3 @@ class AkogdPowerFunctionRemoteControl(Advertisement):
         'Port D (0=full speed counter-clockwise, 100=full speed clockwise)')
     def d(self, value):
         self._set_port(3, value)
-
-    # -- Utilities -----------------------------------------------------------
-
-    def __str__(self):
-        r = bytes_to_hex_string(self._R)
-        if self._state & 0x02:
-            h = bytes_to_hex_string(self._H)
-            m = bytes_to_hex_string(self._M, connector=',')
-            extra = f'connected, hub: {h}, motors: {m}'
-        else:
-            extra = 'unconnected'
-        return f'AkogdRemoteControl(id: {r}, {extra})'

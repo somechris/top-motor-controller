@@ -14,6 +14,8 @@ class AkogdPowerFunctionRemoteControl(Advertisement):
     # -- Initialization ------------------------------------------------------
 
     def __init__(self):
+        self._magic = [0x00, 0x00, 0x67]
+        self._magic_str = ''.join([f'{b:02x}' for b in self._magic])
         self._state = 1
         self._R = [randombyte() for i in range(3)]
         self._H = [0 for i in range(3)]
@@ -30,7 +32,7 @@ class AkogdPowerFunctionRemoteControl(Advertisement):
 
         def callback(advertisement):
             m = advertisement.data.get('Manufacturer', '')
-            if len(m) == 42 and m.startswith('00006705'):
+            if len(m) == 42 and m.startswith(self._magic_str + '05'):
                 # It's a hub wanting to sync with some remote controller
                 if m[14:].startswith(needle):
                     # It's a hub wanting to sync with us \o/
@@ -97,7 +99,7 @@ class AkogdPowerFunctionRemoteControl(Advertisement):
     # -- Data sending --------------------------------------------------------
 
     def _rebuild_data(self):
-        data = [0x00, 0x00, 0x67, self._state] + self._H + self._R + self._M \
+        data = self._magic + [self._state] + self._H + self._R + self._M \
             + self._Z
 
         checksum = 0xe9

@@ -10,7 +10,7 @@ from . import LE_ADVERTISEMENT_IFACE
 
 
 class Advertisement(dbus.service.Object):
-    def __init__(self, advertise=True):
+    def __init__(self):
         super().__init__()
 
         self._manufacturer_data = None
@@ -18,9 +18,6 @@ class Advertisement(dbus.service.Object):
         self._manager = get_advertisement_manager()
 
         self._manager.manage(self)
-
-        if advertise:
-            self.advertise(self)
 
     def advertise(self):
         self._manager.advertise(self)

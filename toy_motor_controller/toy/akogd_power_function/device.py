@@ -23,7 +23,7 @@ class AkogdPowerFunctionDevice(Advertisement):
         self._connected = False
         self._scanner = get_scanner()
 
-        super().__init__(advertise=False)
+        super().__init__()
 
     # -- Connection handling -------------------------------------------------
 

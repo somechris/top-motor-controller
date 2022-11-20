@@ -15,8 +15,12 @@ LOG_DATE_FORMAT = '%Y-%m-%dT%H:%M:%S'
 logging.basicConfig(format=LOG_FORMAT, datefmt=LOG_DATE_FORMAT)
 logger = logging.getLogger(__name__)
 
-def dumper(advertisement):
-    print(advertisement)
+
+def get_dumper(rawData):
+    def dumper(advertisement):
+        print(advertisement.__str__(rawData=rawData))
+    return dumper
+
 
 def main(args):
     logger.debug('Starting toy-motor-controller')
@@ -24,6 +28,7 @@ def main(args):
 
     logger.debug('Initializing scanner')
     scanner = get_scanner()
+    dumper = get_dumper(rawData=args.raw_data)
 
     logger.debug('Starting scanner')
     scanner.register(dumper)
@@ -51,7 +56,12 @@ def parse_arguments():
                         action='store_true',
                         help='dump only found advertisements')
 
+    parser.add_argument('--raw-data',
+                        action='store_true',
+                        help='show numeric advertisement keys')
+
     return parser.parse_args()
+
 
 if __name__ == '__main__':
     args = parse_arguments()

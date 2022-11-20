@@ -54,6 +54,8 @@ class PlaymobilRacerRemoteControl(BluetoothAdvertisementDiscovery):
 
     def disconnect(self):
         self._remote_address = None
+
+        self._characteristic.disconnect()
         self._characteristic = None
 
         return super().disconnect()

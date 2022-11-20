@@ -14,6 +14,7 @@ CLASSES = [
     toy.AkogdPowerFunctionHub,
     toy.AkogdPowerFunctionRemoteControl,
     toy.PlaymobilRacerRemoteControl,
+    toy.PlaymobilRacerVehicle,
 ]
 
 

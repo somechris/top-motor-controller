@@ -14,6 +14,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 ADAPTER_IFACE = 'org.bluez.Adapter1'
+DEVICE_IFACE = 'org.bluez.Device1'
 
 LE_ADVERTISING_MANAGER_IFACE = 'org.bluez.LEAdvertisingManager1'
 LE_ADVERTISEMENT_IFACE = 'org.bluez.LEAdvertisement1'

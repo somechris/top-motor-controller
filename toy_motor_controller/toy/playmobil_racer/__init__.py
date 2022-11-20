@@ -5,10 +5,12 @@
 from .. import __version__
 
 from .remote_control import PlaymobilRacerRemoteControl
+from .vehicle import PlaymobilRacerVehicle
 
 
 __all__ = (
     PlaymobilRacerRemoteControl,
+    PlaymobilRacerVehicle,
     )
 
 __version__ = __version__

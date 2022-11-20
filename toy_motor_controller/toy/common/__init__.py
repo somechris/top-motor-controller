@@ -5,10 +5,12 @@
 from .. import __version__
 
 from .bluetooth_advertisement_discovery import BluetoothAdvertisementDiscovery
+from .characteristic_io_discovery import CharacteristicIODiscovery
 
 
 __all__ = (
     BluetoothAdvertisementDiscovery,
+    CharacteristicIODiscovery,
     )
 
 __version__ = __version__

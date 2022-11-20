@@ -16,10 +16,14 @@ logging.basicConfig(format=LOG_FORMAT, datefmt=LOG_DATE_FORMAT)
 logger = logging.getLogger(__name__)
 
 
-def get_dumper(rawData, min_rssi):
+def get_dumper(rawData, min_rssi, address):
+    if address is not None:
+        address = address.lower()
+
     def dumper(advertisement):
         if min_rssi is None or min_rssi <= advertisement.rssi:
-            print(advertisement.__str__(rawData=rawData))
+            if address is None or address == advertisement.address.lower():
+                print(advertisement.__str__(rawData=rawData))
     return dumper
 
 
@@ -29,7 +33,8 @@ def main(args):
 
     logger.debug('Initializing scanner')
     scanner = get_scanner(active=args.active)
-    dumper = get_dumper(rawData=args.raw_data, min_rssi=args.min_rssi)
+    dumper = get_dumper(
+        rawData=args.raw_data, min_rssi=args.min_rssi, address=args.address)
 
     logger.debug('Starting scanner')
     scanner.register(dumper)
@@ -69,6 +74,10 @@ def parse_arguments():
                         action='store_true',
                         help='perform active (instead of the default passive) '
                         'scans')
+
+    parser.add_argument('--address',
+                        default=None,
+                        help='only show matches from this address')
 
     return parser.parse_args()
 

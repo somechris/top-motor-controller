@@ -34,7 +34,12 @@ class Scanner(object):
             else:
                 if had_callbacks:
                     logger.debug('Stopping scanner')
-                    self._scanner.stop()
+                    try:
+                        self._scanner.stop()
+                    except btle.BTLEDisconnectError:
+                        # The device has already disconnected.
+                        # Since we're stopping anyways, we can ignore that.
+                        pass
                 else:
                     time.sleep(1)
 

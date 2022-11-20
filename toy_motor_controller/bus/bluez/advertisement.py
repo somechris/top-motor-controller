@@ -13,6 +13,7 @@ class Advertisement(dbus.service.Object):
     def __init__(self):
         super().__init__()
 
+        self._local_name = None
         self._manufacturer_data = None
 
         self._manager = get_advertisement_manager()
@@ -34,6 +35,11 @@ class Advertisement(dbus.service.Object):
 
         self._manager.update(self)
 
+    def _set_local_name(self, local_name):
+        self._local_name = local_name
+
+        self._manager.update(self)
+
     @dbus.service.method(toy_motor_controller.bus.dbus.PROPS_IFACE,
                          in_signature='s',
                          out_signature='a{sv}')
@@ -46,6 +52,9 @@ class Advertisement(dbus.service.Object):
             'MinInterval': dbus.UInt32(50),
             'MaxInterval': dbus.UInt32(150),
             }
+
+        if self._local_name is not None:
+            properties['LocalName'] = dbus.String(self._local_name)
 
         if self._manufacturer_data is not None:
             properties['ManufacturerData'] = dbus.Dictionary(

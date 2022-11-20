@@ -30,15 +30,16 @@ def get_advertisement_manager():
 from .scanned_advertisement import ScannedAdvertisement
 from .scanner import Scanner
 
-SCANNER = None
+SCANNER = {}
 
 
-def get_scanner():
+def get_scanner(active=False):
     global SCANNER
-    if SCANNER is None:
-        logger.debug('Creating singleton Scanner')
-        SCANNER = Scanner()
-    return SCANNER
+    kind = 'active' if active else 'passive'
+    if kind not in SCANNER:
+        logger.debug(f'Creating singleton {kind} Scanner')
+        SCANNER[kind] = Scanner(active=active)
+    return SCANNER[kind]
 
 
 from .advertisement import Advertisement

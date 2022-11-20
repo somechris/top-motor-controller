@@ -14,7 +14,8 @@ logger = logging.getLogger(__name__)
 
 
 class Scanner(object):
-    def __init__(self):
+    def __init__(self, active=False):
+        self._passive = not active
         self._scanner = btle.Scanner()
         self._scanner.withDelegate(self.Delegate(self))
         self._callbacks = []
@@ -28,7 +29,7 @@ class Scanner(object):
             if has_callbacks:
                 if not had_callbacks:
                     logger.debug('Starting scanner')
-                    self._scanner.start(passive=True)
+                    self._scanner.start(passive=self._passive)
 
                 self._scanner.process(timeout=3)
             else:

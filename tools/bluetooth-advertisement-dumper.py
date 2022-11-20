@@ -28,7 +28,7 @@ def main(args):
     toy_motor_controller.start()
 
     logger.debug('Initializing scanner')
-    scanner = get_scanner()
+    scanner = get_scanner(active=args.active)
     dumper = get_dumper(rawData=args.raw_data, min_rssi=args.min_rssi)
 
     logger.debug('Starting scanner')
@@ -64,6 +64,11 @@ def parse_arguments():
     parser.add_argument('--min-rssi',
                         type=int, default=None,
                         help='Hide advertisements with rssi below this value')
+
+    parser.add_argument('--active',
+                        action='store_true',
+                        help='perform active (instead of the default passive) '
+                        'scans')
 
     return parser.parse_args()
 

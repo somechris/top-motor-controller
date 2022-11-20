@@ -16,9 +16,10 @@ logging.basicConfig(format=LOG_FORMAT, datefmt=LOG_DATE_FORMAT)
 logger = logging.getLogger(__name__)
 
 
-def get_dumper(rawData):
+def get_dumper(rawData, min_rssi):
     def dumper(advertisement):
-        print(advertisement.__str__(rawData=rawData))
+        if min_rssi is None or min_rssi <= advertisement.rssi:
+            print(advertisement.__str__(rawData=rawData))
     return dumper
 
 
@@ -28,7 +29,7 @@ def main(args):
 
     logger.debug('Initializing scanner')
     scanner = get_scanner()
-    dumper = get_dumper(rawData=args.raw_data)
+    dumper = get_dumper(rawData=args.raw_data, min_rssi=args.min_rssi)
 
     logger.debug('Starting scanner')
     scanner.register(dumper)
@@ -59,6 +60,10 @@ def parse_arguments():
     parser.add_argument('--raw-data',
                         action='store_true',
                         help='show numeric advertisement keys')
+
+    parser.add_argument('--min-rssi',
+                        type=int, default=None,
+                        help='Hide advertisements with rssi below this value')
 
     return parser.parse_args()
 

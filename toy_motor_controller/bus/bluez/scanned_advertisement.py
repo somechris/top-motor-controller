@@ -43,4 +43,5 @@ class ScannedAdvertisement(object):
         if raw_data in ['replace', 'add', True]:
             data += f', raw_data={self.raw_data}'
         return f'{self.__class__.__name__}(address={self.address}, '\
+            f'addressType={self.addressType}, '\
             f'rssi={self.rssi}, connectable={self.connectable}{data})'

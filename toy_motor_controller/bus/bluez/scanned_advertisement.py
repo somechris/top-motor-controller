@@ -23,7 +23,7 @@ class ScannedAdvertisement(object):
         return self._scanEntry.rssi
 
     @property
-    def rawData(self):
+    def raw_data(self):
         ret = {}
         for (tagId, _, tagValue) in self._scanEntry.getScanData():
             ret[tagId] = tagValue
@@ -36,11 +36,11 @@ class ScannedAdvertisement(object):
             ret[tagName] = tagValue
         return ret
 
-    def __str__(self, rawData='hide'):
+    def __str__(self, raw_data='hide'):
         data = ''
-        if rawData != 'replace':
+        if raw_data != 'replace':
             data += f', data={self.data}'
-        if rawData in ['replace', 'add', True]:
-            data += f', rawData={self.rawData}'
+        if raw_data in ['replace', 'add', True]:
+            data += f', raw_data={self.raw_data}'
         return f'{self.__class__.__name__}(address={self.address}, '\
             f'rssi={self.rssi}, connectable={self.connectable}{data})'

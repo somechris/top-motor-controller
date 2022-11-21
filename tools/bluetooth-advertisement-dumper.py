@@ -83,27 +83,37 @@ def dump_services(address, args):
     print('---')
 
 
+def dump_advertisement(advertisement, args):
+    if args.mnemonics == 'hide':
+        str_arg = 'replace'
+    elif args.mnemonics == 'add':
+        str_arg = 'add'
+    elif args.mnemonics == 'replace':
+        str_arg = None
+    else:
+        raise RuntimeError('Logic error')
+    print(advertisement.__str__(raw_data=str_arg))
+
+    if args.dump_services or args.dump_all:
+        dump_services(advertisement.address, args)
+
+
 def get_dumper(args):
     address = args.address
     min_rssi = args.min_rssi
     if address is not None:
         address = address.lower()
 
+    seen_macs = {}
+
     def dumper(advertisement):
         if min_rssi is None or min_rssi <= advertisement.rssi:
-            if address is None or address == advertisement.address.lower():
-                if args.mnemonics == 'hide':
-                    str_arg = 'replace'
-                elif args.mnemonics == 'add':
-                    str_arg = 'add'
-                elif args.mnemonics == 'replace':
-                    str_arg = None
-                else:
-                    raise RuntimeError('Logic error')
-                print(advertisement.__str__(raw_data=str_arg))
-
-                if args.dump_services or args.dump_all:
-                    dump_services(advertisement.address, args)
+            advertisement_address = advertisement.address.lower()
+            if address is None or address == advertisement_address:
+                if not args.ignore_readvertisements or \
+                        advertisement_address not in seen_macs:
+                    dump_advertisement(advertisement, args)
+                    seen_macs[advertisement_address] = 0
 
     return dumper
 
@@ -174,6 +184,11 @@ def parse_arguments():
         action='store_true',
         help='Dump descriptors for each dumped characteristic. This implies '
         '--dump-characteristics')
+
+    parser.add_argument(
+        '--ignore-readvertisements',
+        action='store_true',
+        help='Only show the first advertisement of a MAC address')
 
     parser.add_argument(
         '--min-rssi',

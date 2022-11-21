@@ -133,36 +133,21 @@ def parse_arguments():
         description='Bluetooth Advertisement Dumper',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument('--verbose', '-v',
-                        default=0,
-                        action='count',
-                        help='increase verbosity')
-
-    parser.add_argument('--silent',
-                        action='store_true',
-                        help='dump only found advertisements')
+    parser.add_argument(
+        '--active',
+        action='store_true',
+        help='perform active (instead of the default passive) '
+        'scans')
 
     parser.add_argument(
-        '--mnemonics',
-        choices=['replace', 'add', 'hide'],
-        default='replace',
-        help='controls how to show mnemonics for numeric values. "replace" '
-        'replaces numbers by their mnemonics if possible. "add" shows both '
-        'numbers and mnemonics. "hide" hides mnemonics and shows only '
-        'numbers')
+        '--address',
+        default=None,
+        help='only show matches from this address')
 
-    parser.add_argument('--min-rssi',
-                        type=int, default=None,
-                        help='Hide advertisements with rssi below this value')
-
-    parser.add_argument('--active',
-                        action='store_true',
-                        help='perform active (instead of the default passive) '
-                        'scans')
-
-    parser.add_argument('--address',
-                        default=None,
-                        help='only show matches from this address')
+    parser.add_argument(
+        '--dump-all',
+        action='store_true',
+        help='Turns all --dump-* arguments on')
 
     parser.add_argument(
         '--dump-services',
@@ -173,9 +158,15 @@ def parse_arguments():
         'device\'s advertisement gets scanned before the target device.')
 
     parser.add_argument(
+        '--dump-characteristic-readable-data',
+        action='store_true',
+        help='Dumps the data that can be read from dumped characteristics. '
+        'This implies --dump-characteristics')
+
+    parser.add_argument(
         '--dump-characteristics',
         action='store_true',
-        help='Dump characteristi cs for each dumped service. This implies '
+        help='Dump characteristics for each dumped service. This implies '
         '--dump-services.')
 
     parser.add_argument(
@@ -185,15 +176,29 @@ def parse_arguments():
         '--dump-characteristics')
 
     parser.add_argument(
-        '--dump-characteristic-readable-data',
-        action='store_true',
-        help='Dumps the data that can be read from dumped characteristics. '
-        'This implies --dump-characteristics')
+        '--min-rssi',
+        type=int, default=None,
+        help='Hide advertisements with rssi below this value')
 
     parser.add_argument(
-        '--dump-all',
+        '--mnemonics',
+        choices=['replace', 'add', 'hide'],
+        default='replace',
+        help='controls how to show mnemonics for numeric values. "replace" '
+        'replaces numbers by their mnemonics if possible. "add" shows both '
+        'numbers and mnemonics. "hide" hides mnemonics and shows only '
+        'numbers')
+
+    parser.add_argument(
+        '--silent',
         action='store_true',
-        help='Turns all --dump-* arguments on')
+        help='dump only found advertisements')
+
+    parser.add_argument(
+        '--verbose', '-v',
+        default=0,
+        action='count',
+        help='increase verbosity')
 
     return parser.parse_args()
 

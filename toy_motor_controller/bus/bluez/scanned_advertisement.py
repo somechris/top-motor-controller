@@ -36,8 +36,11 @@ class ScannedAdvertisement(object):
             ret[tagName] = tagValue
         return ret
 
-    def __str__(self, rawData=False):
-        data = f'rawData={self.rawData}' if rawData else f'data={self.data}'
+    def __str__(self, rawData='hide'):
+        data = ''
+        if rawData != 'replace':
+            data += f', data={self.data}'
+        if rawData in ['replace', 'add', True]:
+            data += f', rawData={self.rawData}'
         return f'{self.__class__.__name__}(address={self.address}, '\
-            f'rssi={self.rssi}, connectable={self.connectable}, '\
-            f'{data})'
+            f'rssi={self.rssi}, connectable={self.connectable}{data})'

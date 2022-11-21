@@ -2,7 +2,7 @@
 # GNU Affero General Public License v3.0 only (See LICENSE.txt)
 # SPDX-License-Identifier: AGPL-3.0-only
 
-from toy_motor_controller.bus.bluez import Characteristic
+from toy_motor_controller.bus.bluez import Peripheral
 from toy_motor_controller.control import boolean_standardized_control
 from toy_motor_controller.control import min_max_int_standardized_control
 from toy_motor_controller.control import resending_control
@@ -47,16 +47,18 @@ class PlaymobilRacerRemoteControl(BluetoothAdvertisementDiscovery):
 
     def connect(self, address, supplement=None):
         self._remote_address = address
-        self._characteristic = Characteristic(
-            self._remote_address, self.CHARACTERISTIC_UUID)
+        self._peripheral = Peripheral(address=self._remote_address)
+        self._characteristic = self._peripheral.getCharacteristic(
+            self.CHARACTERISTIC_UUID)
 
         return super().connect()
 
     def disconnect(self):
         self._remote_address = None
 
-        self._characteristic.disconnect()
         self._characteristic = None
+        self._peripheral.disconnect()
+        self._peripheral = None
 
         return super().disconnect()
 

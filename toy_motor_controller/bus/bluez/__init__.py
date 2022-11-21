@@ -14,7 +14,6 @@ LE_ADVERTISING_MANAGER_IFACE = 'org.bluez.LEAdvertisingManager1'
 LE_ADVERTISEMENT_IFACE = 'org.bluez.LEAdvertisement1'
 
 from .advertisement_manager import AdvertisementManager
-from .characteristic import Characteristic
 
 ADVERTISEMENT_MANAGER = None
 
@@ -42,14 +41,24 @@ def get_scanner(active=False):
     return SCANNER[kind]
 
 
+def restart_scanners():
+    global SCANNER
+    for scanner in SCANNER.values():
+        scanner.restart()
+
+
 from .advertisement import Advertisement
+from .peripheral import Peripheral
+from .characteristic import Characteristic
 
 
 __all__ = (
     get_advertisement_manager,
     get_scanner,
+    restart_scanners,
     Advertisement,
     Characteristic,
+    Peripheral,
     ScannedAdvertisement,
     )
 

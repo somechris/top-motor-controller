@@ -9,7 +9,7 @@ import logging
 from bluepy import btle
 
 import toy_motor_controller
-from toy_motor_controller.bus.bluez import get_scanner
+from toy_motor_controller.bus.bluez import get_scanner, Peripheral
 from toy_motor_controller.util import bytes_to_hex_string
 
 LOG_FORMAT = ('%(asctime)s.%(msecs)03d %(levelname)-5s [%(threadName)s] '
@@ -76,8 +76,8 @@ def dump_service(service, args):
 
 
 def dump_services(address, args):
-    device = btle.Peripheral(address)
-    for service in device.getServices():
+    device = Peripheral(address)
+    for service in device._getServices():
         dump_service(service, args)
     device.disconnect()
     print('---')

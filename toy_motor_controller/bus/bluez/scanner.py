@@ -16,31 +16,54 @@ logger = logging.getLogger(__name__)
 class Scanner(object):
     def __init__(self, active=False):
         self._passive = not active
-        self._scanner = btle.Scanner()
-        self._scanner.withDelegate(self.Delegate(self))
+
+        self._backend = btle.Scanner()
+        self._backend.withDelegate(self.Delegate(self))
+        self._backend_lock = threading.Lock()
+        self._backend_running = False
+        self._backend_needs_restart = False
         self._callbacks = []
 
         threading.Thread(target=self._scan, args=(), daemon=True).start()
+
+    def _start_backend(self):
+        with self._backend_lock:
+            if not self._backend_running:
+                logger.debug('Starting scanner')
+                self._backend.start(passive=self._passive)
+                self._backend_running = True
+
+    def _stop_backend(self):
+        with self._backend_lock:
+            if self._backend_running:
+                logger.debug('Stopping scanner')
+                try:
+                    self._backend.stop()
+                except btle.BTLEDisconnectError:
+                    # The device has already disconnected.
+                    # Since we're stopping anyways, we can ignore that.
+                    pass
+            self._backend_running = False
+            self._backend_needs_restart = False
+
+    def restart(self):
+        with self._backend_lock:
+            self._backend_needs_restart = True
 
     def _scan(self):
         has_callbacks = False
         had_callbacks = False
         while True:
-            if has_callbacks:
-                if not had_callbacks:
-                    logger.debug('Starting scanner')
-                    self._scanner.start(passive=self._passive)
+            if self._backend_needs_restart:
+                self._stop_backend()
 
-                self._scanner.process(timeout=3)
+            if has_callbacks:
+                self._start_backend()
+
+                self._backend.process(timeout=3)
             else:
                 if had_callbacks:
-                    logger.debug('Stopping scanner')
-                    try:
-                        self._scanner.stop()
-                    except btle.BTLEDisconnectError:
-                        # The device has already disconnected.
-                        # Since we're stopping anyways, we can ignore that.
-                        pass
+                    self._stop_backend()
                 else:
                     time.sleep(1)
 

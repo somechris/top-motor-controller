@@ -18,7 +18,7 @@ def start():
 
         MAINLOOP = GLib.MainLoop()
 
-        threading.Thread(target=MAINLOOP.run, args=()).start()
+        threading.Thread(target=MAINLOOP.run, args=(), daemon=True).start()
 
     return MAINLOOP
 

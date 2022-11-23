@@ -13,6 +13,7 @@ ADAPTER_IFACE = 'org.bluez.Adapter1'
 LE_ADVERTISING_MANAGER_IFACE = 'org.bluez.LEAdvertisingManager1'
 LE_ADVERTISEMENT_IFACE = 'org.bluez.LEAdvertisement1'
 
+from .advertisement_registration_error import AdvertisementRegistrationError
 from .advertisement_manager import AdvertisementManager
 
 ADVERTISEMENT_MANAGER = None
@@ -57,6 +58,7 @@ __all__ = (
     get_scanner,
     restart_scanners,
     Advertisement,
+    AdvertisementRegistrationError,
     Characteristic,
     Peripheral,
     ScannedAdvertisement,

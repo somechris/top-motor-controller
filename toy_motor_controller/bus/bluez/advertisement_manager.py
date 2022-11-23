@@ -9,6 +9,7 @@ import dbus
 from toy_motor_controller.bus.dbus import get_dbus
 
 from . import SERVICE_NAME, ADAPTER_IFACE, LE_ADVERTISING_MANAGER_IFACE
+from . import AdvertisementRegistrationError
 
 import logging
 logger = logging.getLogger(__name__)
@@ -79,43 +80,53 @@ class AdvertisementManager():
     def advertise(self, advertisement):
         properties = self._advertisements[advertisement]
         if not properties['advertised']:
-            properties['lock'].acquire()
-            if not properties['advertised']:
-                self._advertise(properties)
-            else:
-                properties['lock'].release()
+            with properties['lock']:
+                if not properties['advertised']:
+                    self._advertise(properties)
 
     def _advertise(self, properties):
         path = properties['path']
 
-        def cleanup():
-            properties['lock'].release()
+        succeeded = None
+        error = None
+
+        barrier = threading.Lock()
+        barrier.acquire()
 
         def advertizing_worked():
-            properties['advertised'] = True
-            logger.debug(f'Registering {path} done')
-            cleanup()
+            nonlocal succeeded
+            succeeded = True
+            barrier.release()
 
-        def advertizing_failed(error):
-            logger.debug(f'Registering {path} failed: {error}')
-            cleanup()
+        def advertizing_failed(_error):
+            nonlocal succeeded
+            nonlocal error
+            succeeded = False
+            error = _error
+            barrier.release()
 
         self._manager.RegisterAdvertisement(
             path, {},
             reply_handler=advertizing_worked,
             error_handler=advertizing_failed)
 
+        barrier.acquire()
+        barrier.release()
+
+        if not succeeded:
+            raise AdvertisementRegistrationError(path, error)
+
+        logger.debug(f'Registering {path} done')
+
     def update(self, advertisement):
         logger.debug(f'Updating {advertisement}')
 
         properties = self._advertisements[advertisement]
         if properties['advertised']:
-            properties['lock'].acquire()
-            if properties['advertised']:
-                self._unadvertise(properties)
-                self._advertise(properties)
-            else:
-                properties['lock'].release()
+            with properties['lock']:
+                if properties['advertised']:
+                    self._unadvertise(properties)
+                    self._advertise(properties)
 
     @property
     def address(self):

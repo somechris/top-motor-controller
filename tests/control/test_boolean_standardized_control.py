@@ -9,7 +9,7 @@ from toy_motor_controller.control import BooleanStandardizedControl
 from tests import BasicTestCase
 
 
-class BooleanStandardizedControlTXstCase(BasicTestCase):
+class BooleanStandardizedControlTestCase(BasicTestCase):
     def test_unintialized_get(self):
         setter = Mock()
 

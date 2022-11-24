@@ -2,7 +2,7 @@
 # GNU Affero General Public License v3.0 only (See LICENSE.txt)
 # SPDX-License-Identifier: AGPL-3.0-only
 
-from .environment import BasicTestCase
+from tests import BasicTestCase
 
 from toy_motor_controller.util import \
     randombyte, \

@@ -6,7 +6,7 @@ from unittest.mock import Mock
 
 from toy_motor_controller.control import MinMaxIntStandardizedControl
 
-from ..environment import BasicTestCase
+from tests import BasicTestCase
 
 
 class MinMaxIntStandardizedControlTestCase(BasicTestCase):

@@ -13,7 +13,23 @@ ADAPTER_IFACE = 'org.bluez.Adapter1'
 LE_ADVERTISING_MANAGER_IFACE = 'org.bluez.LEAdvertisingManager1'
 LE_ADVERTISEMENT_IFACE = 'org.bluez.LEAdvertisement1'
 
-from .advertisement_registration_error import AdvertisementRegistrationError
+REGISTRATION_MANAGER_BASE_PATH = '/org/bluez/example'
+
+from .adapter import Adapter
+
+ADAPTER = None
+
+
+def get_adapter():
+    global ADAPTER
+    if ADAPTER is None:
+        logger.debug('Creating singleton Adapter')
+        ADAPTER = Adapter(interfaces=[LE_ADVERTISING_MANAGER_IFACE])
+    return ADAPTER
+
+
+from .registration_error import RegistrationError
+from .registration_manager import RegistrationManager
 from .advertisement_manager import AdvertisementManager
 
 ADVERTISEMENT_MANAGER = None
@@ -23,7 +39,7 @@ def get_advertisement_manager():
     global ADVERTISEMENT_MANAGER
     if ADVERTISEMENT_MANAGER is None:
         logger.debug('Creating singleton AdvertisementManager')
-        ADVERTISEMENT_MANAGER = AdvertisementManager()
+        ADVERTISEMENT_MANAGER = AdvertisementManager(get_adapter())
     return ADVERTISEMENT_MANAGER
 
 
@@ -58,9 +74,10 @@ __all__ = (
     get_scanner,
     restart_scanners,
     Advertisement,
-    AdvertisementRegistrationError,
     Characteristic,
     Peripheral,
+    RegistrationManager,
+    RegistrationError,
     ScannedAdvertisement,
     )
 

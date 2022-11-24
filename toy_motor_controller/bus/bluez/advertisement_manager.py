@@ -2,144 +2,19 @@
 # GNU Affero General Public License v3.0 only (See LICENSE.txt)
 # SPDX-License-Identifier: AGPL-3.0-only
 
-import threading
-
-import dbus
-
-from toy_motor_controller.bus.dbus import get_dbus
-
-from . import SERVICE_NAME, ADAPTER_IFACE, LE_ADVERTISING_MANAGER_IFACE
-from . import AdvertisementRegistrationError
+from . import LE_ADVERTISING_MANAGER_IFACE, RegistrationManager
 
 import logging
 logger = logging.getLogger(__name__)
 
-ADVERTISEMENT_BASE_PATH = '/org/bluez/example/advertisement'
 
-
-class AdvertisementManager():
-    def __init__(self):
-        logger.debug('Bringing up AdvertisementManager ...')
-        self._dbus = get_dbus()
-
-        bluez = self._dbus.get_object(SERVICE_NAME, '/')
-        bluez_mos = self._dbus.get_om_iface(bluez).GetManagedObjects()
-
-        adapter_path = None
-        adapter_props = None
-        for mo, props in bluez_mos.items():
-            if not adapter_path:
-                if LE_ADVERTISING_MANAGER_IFACE in props:
-                    adapter_path = mo
-
-        adapter = self._dbus.get_object(SERVICE_NAME, adapter_path)
-        adapter_props = self._dbus.get_props_iface(adapter)
-
-        # Power on adapter
-        adapter_props.Set(ADAPTER_IFACE, "Powered", dbus.Boolean(1))
-        logger.debug('Bluetooth adapter is powered')
-
-        # Fetch address
-        self._data = {}
-        for key in ['Address', 'AddressType', 'Name', 'Alias']:
-            value = adapter_props.Get(ADAPTER_IFACE, key)
-            logger.debug(f'Bluetooth adapter has {key} {value}')
-            self._data[key] = value
-
-        self._manager = dbus.Interface(adapter, LE_ADVERTISING_MANAGER_IFACE)
-
-        self._advertisements = {}
-        logger.debug('AdvertisementManager is up and running')
-
-    def manage(self, advertisement):
-        if advertisement not in self._advertisements:
-            logger.debug(f'Starting to manage {advertisement}')
-            path = ADVERTISEMENT_BASE_PATH \
-                + str(len(self._advertisements.keys()))
-            self._dbus.init_object(advertisement, path)
-            properties = {
-                'path': path,
-                'lock': threading.Lock(),
-                'advertised': False,
-                }
-            self._advertisements[advertisement] = properties
-
-    def unadvertise(self, advertisement):
-        properties = self._advertisements[advertisement]
-        if properties['advertised']:
-            with properties['lock']:
-                if properties['advertised']:
-                    self._unadvertise(properties)
-
-    def _unadvertise(self, properties):
-        path = properties['path']
-        logger.debug(f'Unadvertising {path}')
-        self._manager.UnregisterAdvertisement(path)
-        properties['advertised'] = False
+class AdvertisementManager(RegistrationManager):
+    def __init__(self, adapter):
+        super().__init__(adapter, LE_ADVERTISING_MANAGER_IFACE,
+                         'Advertisement')
 
     def advertise(self, advertisement):
-        properties = self._advertisements[advertisement]
-        if not properties['advertised']:
-            with properties['lock']:
-                if not properties['advertised']:
-                    self._advertise(properties)
+        return self.register(advertisement)
 
-    def _advertise(self, properties):
-        path = properties['path']
-
-        succeeded = None
-        error = None
-
-        barrier = threading.Lock()
-        barrier.acquire()
-
-        def advertizing_worked():
-            nonlocal succeeded
-            succeeded = True
-            barrier.release()
-
-        def advertizing_failed(_error):
-            nonlocal succeeded
-            nonlocal error
-            succeeded = False
-            error = _error
-            barrier.release()
-
-        self._manager.RegisterAdvertisement(
-            path, {},
-            reply_handler=advertizing_worked,
-            error_handler=advertizing_failed)
-
-        barrier.acquire()
-        barrier.release()
-
-        if not succeeded:
-            raise AdvertisementRegistrationError(path, error)
-
-        logger.debug(f'Registering {path} done')
-
-    def update(self, advertisement):
-        logger.debug(f'Updating {advertisement}')
-
-        properties = self._advertisements[advertisement]
-        if properties['advertised']:
-            with properties['lock']:
-                if properties['advertised']:
-                    self._unadvertise(properties)
-                    self._advertise(properties)
-
-    @property
-    def address(self):
-        return self._data['Address']
-
-    @property
-    def address_type(self):
-        return self._data['AddressType']
-
-    @property
-    def name(self):
-        return self._data['Name']
-
-    @property
-    def alias(self):
-        return self._data['Alias']
+    def unadvertise(self, advertisement):
+        return self.unregister(advertisement)

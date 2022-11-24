@@ -4,6 +4,9 @@
 
 import random
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 def randombyte():
     return random.randrange(0, 256)
@@ -28,3 +31,21 @@ def clamped(value, minimum, maximum):
 
 def clamped_int(value, minimum, maximum):
     return clamped(int(value+0.5), minimum, maximum)
+
+
+def singleton_getter(class_, args=lambda: (), key=None, registry=None):
+    instance = None
+
+    def get():
+        nonlocal instance
+        if instance is None:
+            extra = ''
+            if key is not None:
+                extra = f' ({key})'
+            logger.debug(f'Creating singleton {class_.__name__}{extra}')
+            instance = class_(*args())
+
+            if registry is not None and key is not None:
+                registry[key] = instance
+        return instance
+    return get

@@ -4,6 +4,8 @@
 
 from .. import __version__
 
+from toy_motor_controller.util import singleton_getter
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -16,46 +18,30 @@ LE_ADVERTISEMENT_IFACE = 'org.bluez.LEAdvertisement1'
 REGISTRATION_MANAGER_BASE_PATH = '/org/bluez/example'
 
 from .adapter import Adapter
-
-ADAPTER = None
-
-
-def get_adapter():
-    global ADAPTER
-    if ADAPTER is None:
-        logger.debug('Creating singleton Adapter')
-        ADAPTER = Adapter(interfaces=[LE_ADVERTISING_MANAGER_IFACE])
-    return ADAPTER
-
-
 from .registration_error import RegistrationError
 from .registration_manager import RegistrationManager
 from .advertisement_manager import AdvertisementManager
 
-ADVERTISEMENT_MANAGER = None
-
-
-def get_advertisement_manager():
-    global ADVERTISEMENT_MANAGER
-    if ADVERTISEMENT_MANAGER is None:
-        logger.debug('Creating singleton AdvertisementManager')
-        ADVERTISEMENT_MANAGER = AdvertisementManager(get_adapter())
-    return ADVERTISEMENT_MANAGER
-
+get_adapter = singleton_getter(
+    Adapter, lambda: ([LE_ADVERTISING_MANAGER_IFACE],))
+get_advertisement_manager = singleton_getter(
+    AdvertisementManager, lambda: (get_adapter(),))
 
 from .scanned_advertisement import ScannedAdvertisement
 from .scanner import Scanner
 
 SCANNER = {}
 
+get_scanner_active = singleton_getter(
+    Scanner, lambda: {'active': True}, 'active', SCANNER)
+get_scanner_passive = singleton_getter(
+    Scanner, lambda: {'active': False}, 'passive', SCANNER)
+
 
 def get_scanner(active=False):
-    global SCANNER
-    kind = 'active' if active else 'passive'
-    if kind not in SCANNER:
-        logger.debug(f'Creating singleton {kind} Scanner')
-        SCANNER[kind] = Scanner(active=active)
-    return SCANNER[kind]
+    if active:
+        return get_scanner_active()
+    return get_scanner_passive()
 
 
 def restart_scanners():
@@ -72,6 +58,8 @@ from .characteristic import Characteristic
 __all__ = (
     get_advertisement_manager,
     get_scanner,
+    get_scanner_active,
+    get_scanner_passive,
     restart_scanners,
     Advertisement,
     Characteristic,

@@ -4,23 +4,14 @@
 
 from .. import __version__
 
-import logging
-logger = logging.getLogger(__name__)
-
 import dbus
+
+from toy_motor_controller.util import singleton_getter
 
 from .dbus_wrapper import DBus, OM_IFACE, PROPS_IFACE
 from .invalid_args_exception import InvalidArgsException
 
-DBUS = None
-
-
-def get_dbus():
-    global DBUS
-    if DBUS is None:
-        logger.debug('Creating singleton dbus')
-        DBUS = DBus(dbus.SystemBus())
-    return DBUS
+get_dbus = singleton_getter(DBus, lambda: (dbus.SystemBus(),))
 
 
 __all__ = (

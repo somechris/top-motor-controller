@@ -49,3 +49,27 @@ def singleton_getter(class_, args=lambda: (), key=None, registry=None):
                 registry[key] = instance
         return instance
     return get
+
+
+def get_fully_qualified_name(class_):
+    module_ = class_.__module__
+    return f'{module_}.{class_.__qualname__}'
+
+
+def get_fully_qualified_inherited_names(class_):
+    to_process = [class_]
+    processed = set()
+    while to_process:
+        class_ = to_process.pop(0)
+        if class_ not in processed:
+            yield get_fully_qualified_name(class_)
+            to_process.extend(class_.__bases__)
+            processed.add(class_)
+
+
+def get_fully_qualified_class_name(obj):
+    return get_fully_qualified_name(obj.__class__)
+
+
+def get_fully_qualified_inherited_class_names(obj):
+    return get_fully_qualified_inherited_names(obj.__class__)

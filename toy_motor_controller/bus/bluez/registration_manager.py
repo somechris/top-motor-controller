@@ -4,7 +4,7 @@
 
 import threading
 
-from . import RegistrationError, REGISTRATION_MANAGER_BASE_PATH
+from . import RegistrationError
 
 import logging
 logger = logging.getLogger(__name__)
@@ -41,7 +41,7 @@ class RegistrationManager():
                 logger.debug('Starting to manage on object of '
                              f'{obj.__class__.__name__}')
             properties = {
-                'path': path,
+                'path': obj.dbus_path,
                 'lock': threading.Lock(),
                 'registered': False,
                 }

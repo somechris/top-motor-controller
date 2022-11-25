@@ -5,6 +5,8 @@
 from .. import __version__
 
 from toy_motor_controller.util import singleton_getter
+from toy_motor_controller.util import get_fully_qualified_name
+from toy_motor_controller.bus.dbus import get_dbus_object_registry
 
 import logging
 logger = logging.getLogger(__name__)
@@ -14,8 +16,6 @@ ADAPTER_IFACE = 'org.bluez.Adapter1'
 
 LE_ADVERTISING_MANAGER_IFACE = 'org.bluez.LEAdvertisingManager1'
 LE_ADVERTISEMENT_IFACE = 'org.bluez.LEAdvertisement1'
-
-REGISTRATION_MANAGER_BASE_PATH = '/org/bluez/example'
 
 from .adapter import Adapter
 from .registration_error import RegistrationError
@@ -54,6 +54,10 @@ from .advertisement import Advertisement
 from .peripheral import Peripheral
 from .characteristic import Characteristic
 
+dbus_object_registry = get_dbus_object_registry()
+dbus_object_registry.map_name(
+    get_fully_qualified_name(Advertisement),
+    'advertisement')
 
 __all__ = (
     get_advertisement_manager,

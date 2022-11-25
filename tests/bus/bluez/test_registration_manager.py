@@ -51,7 +51,6 @@ class RegistrationManagerTestCase(BasicTestCase):
         adapter.assert_not_called()
         adapter.get_interface.assert_called_once_with('iface-foo')
         adapter.get_interface.reset_mock()
-        adapter.dbus_init_object.assert_not_called()
 
         backend_manager.assert_not_called()
         backend_manager.RegisterFacetBar.assert_not_called()
@@ -62,10 +61,7 @@ class RegistrationManagerTestCase(BasicTestCase):
     def test_single_unregistered(self):
         (manager, adapter, backend_manager) = self.createRegistrationManager()
 
-        manager.manage('FOO')
-
-        adapter.dbus_init_object.assert_called_once_with(
-            'FOO', '/org/bluez/example/facetbar0')
+        manager.manage(self.Registree('FOO'))
 
         backend_manager.RegisterFacetBar.assert_not_called()
         backend_manager.UnregisterFacetBar.assert_not_called()
@@ -73,18 +69,14 @@ class RegistrationManagerTestCase(BasicTestCase):
     def test_multiple_unregistered(self):
         (manager, adapter, backend_manager) = self.createRegistrationManager()
 
-        manager.manage('FOO')
+        manager.manage(self.Registree('FOO'))
 
-        adapter.dbus_init_object.assert_called_once_with(
-            'FOO', '/org/bluez/example/facetbar0')
         adapter.dbus_init_object.reset_mock()
         backend_manager.RegisterFacetBar.assert_not_called()
         backend_manager.UnregisterFacetBar.assert_not_called()
 
-        manager.manage('BAR')
+        manager.manage(self.Registree('BAR'))
 
-        adapter.dbus_init_object.assert_called_once_with(
-            'BAR', '/org/bluez/example/facetbar1')
         backend_manager.RegisterFacetBar.assert_not_called()
         backend_manager.UnregisterFacetBar.assert_not_called()
 
@@ -92,69 +84,57 @@ class RegistrationManagerTestCase(BasicTestCase):
         (manager, adapter, backend_manager) = self.createRegistrationManager(
             [True])
 
-        manager.manage('FOO')
+        registreeFoo = self.Registree('FOO')
+        manager.manage(registreeFoo)
 
-        adapter.dbus_init_object.assert_called_once_with(
-            'FOO', '/org/bluez/example/facetbar0')
-        adapter.dbus_init_object.reset_mock()
         backend_manager.RegisterFacetBar.assert_not_called()
         backend_manager.UnregisterFacetBar.assert_not_called()
 
-        manager.register('FOO')
+        manager.register(registreeFoo)
 
-        adapter.dbus_init_object.assert_not_called()
         backend_manager.RegisterFacetBar.assert_called_once()
         self.assertEqual(backend_manager.RegisterFacetBar.call_args.args,
-                         ('/org/bluez/example/facetbar0', {}))
+                         ('FOO', {}))
         backend_manager.RegisterFacetBar.reset_mock()
         backend_manager.UnregisterFacetBar.assert_not_called()
 
-        manager.unregister('FOO')
+        manager.unregister(registreeFoo)
 
-        adapter.dbus_init_object.assert_not_called()
         backend_manager.ReregisterFacetBar.assert_not_called()
-        backend_manager.UnregisterFacetBar.assert_called_once_with(
-            '/org/bluez/example/facetbar0')
+        backend_manager.UnregisterFacetBar.assert_called_once_with('FOO')
         backend_manager.UnregisterFacetBar.reset_mock()
 
     def test_single_double_registration(self):
         (manager, adapter, backend_manager) = self.createRegistrationManager(
             [True])
 
-        manager.manage('FOO')
+        registreeFoo = self.Registree('FOO')
+        manager.manage(registreeFoo)
 
-        adapter.dbus_init_object.assert_called_once_with(
-            'FOO', '/org/bluez/example/facetbar0')
-        adapter.dbus_init_object.reset_mock()
         backend_manager.RegisterFacetBar.assert_not_called()
         backend_manager.UnregisterFacetBar.assert_not_called()
 
-        manager.register('FOO')
+        manager.register(registreeFoo)
 
-        adapter.dbus_init_object.assert_not_called()
         backend_manager.RegisterFacetBar.assert_called_once()
         self.assertEqual(backend_manager.RegisterFacetBar.call_args.args,
-                         ('/org/bluez/example/facetbar0', {}))
+                         ('FOO', {}))
         backend_manager.RegisterFacetBar.reset_mock()
         backend_manager.UnregisterFacetBar.assert_not_called()
 
-        manager.register('FOO')
+        manager.register(registreeFoo)
 
-        adapter.dbus_init_object.assert_not_called()
         backend_manager.ReregisterFacetBar.assert_not_called()
         backend_manager.UnregisterFacetBar.assert_not_called()
 
-        manager.unregister('FOO')
+        manager.unregister(registreeFoo)
 
-        adapter.dbus_init_object.assert_not_called()
         backend_manager.ReregisterFacetBar.assert_not_called()
-        backend_manager.UnregisterFacetBar.assert_called_once_with(
-            '/org/bluez/example/facetbar0')
+        backend_manager.UnregisterFacetBar.assert_called_once_with('FOO')
         backend_manager.UnregisterFacetBar.reset_mock()
 
-        manager.unregister('FOO')
+        manager.unregister(registreeFoo)
 
-        adapter.dbus_init_object.assert_not_called()
         backend_manager.ReregisterFacetBar.assert_not_called()
         backend_manager.UnregisterFacetBar.assert_not_called()
 
@@ -162,90 +142,75 @@ class RegistrationManagerTestCase(BasicTestCase):
         (manager, adapter, backend_manager) = self.createRegistrationManager(
             [True, True])
 
-        manager.manage('FOO')
+        registreeFoo = self.Registree('FOO')
+        manager.manage(registreeFoo)
 
-        adapter.dbus_init_object.assert_called_once_with(
-            'FOO', '/org/bluez/example/facetbar0')
-        adapter.dbus_init_object.reset_mock()
         backend_manager.RegisterFacetBar.assert_not_called()
         backend_manager.UnregisterFacetBar.assert_not_called()
 
-        manager.register('FOO')
+        manager.register(registreeFoo)
 
-        adapter.dbus_init_object.assert_not_called()
         backend_manager.RegisterFacetBar.assert_called_once()
         self.assertEqual(backend_manager.RegisterFacetBar.call_args.args,
-                         ('/org/bluez/example/facetbar0', {}))
+                         ('FOO', {}))
         backend_manager.RegisterFacetBar.reset_mock()
         backend_manager.UnregisterFacetBar.assert_not_called()
 
-        manager.unregister('FOO')
+        manager.unregister(registreeFoo)
 
-        adapter.dbus_init_object.assert_not_called()
         backend_manager.ReregisterFacetBar.assert_not_called()
-        backend_manager.UnregisterFacetBar.assert_called_once_with(
-            '/org/bluez/example/facetbar0')
+        backend_manager.UnregisterFacetBar.assert_called_once_with('FOO')
         backend_manager.UnregisterFacetBar.reset_mock()
 
-        manager.register('FOO')
+        manager.register(registreeFoo)
 
-        adapter.dbus_init_object.assert_not_called()
         backend_manager.RegisterFacetBar.assert_called_once()
         self.assertEqual(backend_manager.RegisterFacetBar.call_args.args,
-                         ('/org/bluez/example/facetbar0', {}))
+                         ('FOO', {}))
         backend_manager.RegisterFacetBar.reset_mock()
         backend_manager.UnregisterFacetBar.assert_not_called()
 
-        manager.unregister('FOO')
+        manager.unregister(registreeFoo)
 
-        adapter.dbus_init_object.assert_not_called()
         backend_manager.ReregisterFacetBar.assert_not_called()
-        backend_manager.UnregisterFacetBar.assert_called_once_with(
-            '/org/bluez/example/facetbar0')
+        backend_manager.UnregisterFacetBar.assert_called_once_with('FOO')
         backend_manager.UnregisterFacetBar.reset_mock()
 
     def test_single_reregistration_after_failure(self):
         (manager, adapter, backend_manager) = self.createRegistrationManager(
             [False, True])
 
-        manager.manage('FOO')
+        registreeFoo = self.Registree('FOO')
+        manager.manage(registreeFoo)
 
-        adapter.dbus_init_object.assert_called_once_with(
-            'FOO', '/org/bluez/example/facetbar0')
-        adapter.dbus_init_object.reset_mock()
         backend_manager.RegisterFacetBar.assert_not_called()
         backend_manager.UnregisterFacetBar.assert_not_called()
 
         with self.assertRaises(RegistrationError):
-            manager.register('FOO')
+            manager.register(registreeFoo)
 
-        adapter.dbus_init_object.assert_not_called()
         backend_manager.RegisterFacetBar.assert_called_once()
         self.assertEqual(backend_manager.RegisterFacetBar.call_args.args,
-                         ('/org/bluez/example/facetbar0', {}))
+                         ('FOO', {}))
         backend_manager.RegisterFacetBar.reset_mock()
         backend_manager.UnregisterFacetBar.assert_not_called()
 
-        manager.register('FOO')
+        manager.register(registreeFoo)
 
-        adapter.dbus_init_object.assert_not_called()
         backend_manager.RegisterFacetBar.assert_called_once()
         self.assertEqual(backend_manager.RegisterFacetBar.call_args.args,
-                         ('/org/bluez/example/facetbar0', {}))
+                         ('FOO', {}))
         backend_manager.RegisterFacetBar.reset_mock()
         backend_manager.UnregisterFacetBar.assert_not_called()
 
-        manager.unregister('FOO')
+        manager.unregister(registreeFoo)
 
-        adapter.dbus_init_object.assert_not_called()
         backend_manager.ReregisterFacetBar.assert_not_called()
-        backend_manager.UnregisterFacetBar.assert_called_once_with(
-            '/org/bluez/example/facetbar0')
+        backend_manager.UnregisterFacetBar.assert_called_once_with('FOO')
         backend_manager.UnregisterFacetBar.reset_mock()
 
-        manager.unregister('FOO')
+        manager.unregister(registreeFoo)
 
-        adapter.dbus_init_object.assert_not_called()
         backend_manager.ReregisterFacetBar.assert_not_called()
         backend_manager.UnregisterFacetBar.assert_not_called()
         backend_manager.UnregisterFacetBar.reset_mock()
@@ -253,17 +218,14 @@ class RegistrationManagerTestCase(BasicTestCase):
     def test_single_update_unregisterted(self):
         (manager, adapter, backend_manager) = self.createRegistrationManager()
 
-        manager.manage('FOO')
+        registreeFoo = self.Registree('FOO')
+        manager.manage(registreeFoo)
 
-        adapter.dbus_init_object.assert_called_once_with(
-            'FOO', '/org/bluez/example/facetbar0')
-        adapter.dbus_init_object.reset_mock()
         backend_manager.RegisterFacetBar.assert_not_called()
         backend_manager.UnregisterFacetBar.assert_not_called()
 
-        manager.update('FOO')
+        manager.update(registreeFoo)
 
-        adapter.dbus_init_object.assert_not_called()
         backend_manager.RegisterFacetBar.assert_not_called()
         backend_manager.UnregisterFacetBar.assert_not_called()
 
@@ -271,40 +233,37 @@ class RegistrationManagerTestCase(BasicTestCase):
         (manager, adapter, backend_manager) = self.createRegistrationManager(
             [True, True])
 
-        manager.manage('FOO')
+        registreeFoo = self.Registree('FOO')
+        manager.manage(registreeFoo)
 
-        adapter.dbus_init_object.assert_called_once_with(
-            'FOO', '/org/bluez/example/facetbar0')
-        adapter.dbus_init_object.reset_mock()
         backend_manager.RegisterFacetBar.assert_not_called()
         backend_manager.UnregisterFacetBar.assert_not_called()
 
-        manager.register('FOO')
+        manager.register(registreeFoo)
 
-        adapter.dbus_init_object.assert_not_called()
         backend_manager.RegisterFacetBar.assert_called_once()
         self.assertEqual(backend_manager.RegisterFacetBar.call_args.args,
-                         ('/org/bluez/example/facetbar0', {}))
+                         ('FOO', {}))
         backend_manager.RegisterFacetBar.reset_mock()
         backend_manager.UnregisterFacetBar.assert_not_called()
 
-        manager.update('FOO')
+        manager.update(registreeFoo)
 
-        adapter.dbus_init_object.assert_not_called()
         self.assertEqual(backend_manager.RegisterFacetBar.call_args.args,
-                         ('/org/bluez/example/facetbar0', {}))
+                         ('FOO', {}))
         backend_manager.RegisterFacetBar.reset_mock()
-        backend_manager.UnregisterFacetBar.assert_called_once_with(
-            '/org/bluez/example/facetbar0')
+        backend_manager.UnregisterFacetBar.assert_called_once_with('FOO')
         backend_manager.UnregisterFacetBar.reset_mock()
 
-        manager.unregister('FOO')
+        manager.unregister(registreeFoo)
 
-        adapter.dbus_init_object.assert_not_called()
         backend_manager.ReregisterFacetBar.assert_not_called()
-        backend_manager.UnregisterFacetBar.assert_called_once_with(
-            '/org/bluez/example/facetbar0')
+        backend_manager.UnregisterFacetBar.assert_called_once_with('FOO')
         backend_manager.UnregisterFacetBar.reset_mock()
 
         self.assertEqual(backend_manager.registration_calls,
                          ['register', 'unregister', 'register', 'unregister'])
+
+    class Registree():
+        def __init__(self, path):
+            self.dbus_path = path

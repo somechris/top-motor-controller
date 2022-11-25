@@ -9,7 +9,11 @@ from toy_motor_controller.util import \
     bytes_to_hex_string, \
     hex_string_to_bytes, \
     clamped, \
-    clamped_int
+    clamped_int, \
+    get_fully_qualified_class_name, \
+    get_fully_qualified_inherited_class_names, \
+    get_fully_qualified_inherited_names, \
+    get_fully_qualified_name
 
 
 class ControlTestCase(BasicTestCase):
@@ -92,3 +96,135 @@ class ControlTestCase(BasicTestCase):
     def test_clamped_int_above(self):
         actual = clamped_int(100, 10, 87)
         self.assertEqual(actual, 87)
+
+    def test_get_fully_qualified_name_None(self):
+        actual = get_fully_qualified_name(None.__class__)
+        self.assertEqual(actual, 'builtins.NoneType')
+
+    def test_get_fully_qualified_name_object(self):
+        actual = get_fully_qualified_name(object().__class__)
+        self.assertEqual(actual, 'builtins.object')
+
+    def test_get_fully_qualified_name_string(self):
+        actual = get_fully_qualified_name('foo'.__class__)
+        self.assertEqual(actual, 'builtins.str')
+
+    def test_get_fully_qualified_name_self(self):
+        actual = get_fully_qualified_name(self.__class__)
+        self.assertEqual(actual, 'tests.test_util.ControlTestCase')
+
+    def test_get_fully_qualified_name_self_ABBCD(self):
+        actual = get_fully_qualified_name(self.clsABBCD)
+        self.assertEqual(actual, 'tests.test_util.ControlTestCase.clsABBCD')
+
+    def test_get_fully_qualified_class_name_None(self):
+        actual = get_fully_qualified_class_name(None)
+        self.assertEqual(actual, 'builtins.NoneType')
+
+    def test_get_fully_qualified_class_name_object(self):
+        actual = get_fully_qualified_class_name(object())
+        self.assertEqual(actual, 'builtins.object')
+
+    def test_get_fully_qualified_class_name_string(self):
+        actual = get_fully_qualified_class_name('foo')
+        self.assertEqual(actual, 'builtins.str')
+
+    def test_get_fully_qualified_class_name_self(self):
+        actual = get_fully_qualified_class_name(self)
+        self.assertEqual(actual, 'tests.test_util.ControlTestCase')
+
+    def test_get_fully_qualified_class_name_self_ABBCD(self):
+        actual = get_fully_qualified_class_name(self.clsABBCD())
+        self.assertEqual(actual, 'tests.test_util.ControlTestCase.clsABBCD')
+
+    def test_get_fully_qualified_inherited_class_names_None(self):
+        actual = get_fully_qualified_inherited_class_names(None)
+        self.assertEqual(list(actual),
+                         ['builtins.NoneType', 'builtins.object'])
+
+    def test_get_fully_qualified_inherited_class_names_object(self):
+        actual = get_fully_qualified_inherited_class_names(object())
+        self.assertEqual(list(actual), ['builtins.object'])
+
+    def test_get_fully_qualified_inherited_class_names_string(self):
+        actual = get_fully_qualified_inherited_class_names('foo')
+        self.assertEqual(list(actual),
+                         ['builtins.str', 'builtins.object'])
+
+    def test_get_fully_qualified_inherited_class_names_self(self):
+        actual = get_fully_qualified_inherited_class_names(self)
+        self.assertEqual(list(actual), [
+                'tests.test_util.ControlTestCase',
+                'tests.environment.BasicTestCase',
+                'unittest.case.TestCase',
+                'builtins.object',
+                ])
+
+    def test_get_fully_qualified_inherited_class_names_self_ABBCD(self):
+        actual = get_fully_qualified_inherited_class_names(self.clsABBCD())
+        self.assertEqual(list(actual), [
+                'tests.test_util.ControlTestCase.clsABBCD',
+                'tests.test_util.ControlTestCase.clsAB',
+                'tests.test_util.ControlTestCase.clsBC',
+                'tests.test_util.ControlTestCase.clsD',
+                'tests.test_util.ControlTestCase.clsA',
+                'tests.test_util.ControlTestCase.clsB',
+                'tests.test_util.ControlTestCase.clsC',
+                'builtins.object',
+                ])
+
+    def test_get_fully_qualified_inherited_names_None(self):
+        actual = get_fully_qualified_inherited_names(None.__class__)
+        self.assertEqual(list(actual),
+                         ['builtins.NoneType', 'builtins.object'])
+
+    def test_get_fully_qualified_inherited_names_object(self):
+        actual = get_fully_qualified_inherited_names(object().__class__)
+        self.assertEqual(list(actual), ['builtins.object'])
+
+    def test_get_fully_qualified_inherited_names_string(self):
+        actual = get_fully_qualified_inherited_names('foo'.__class__)
+        self.assertEqual(list(actual), ['builtins.str', 'builtins.object'])
+
+    def test_get_fully_qualified_inherited_names_self(self):
+        actual = get_fully_qualified_inherited_names(self.__class__)
+        self.assertEqual(list(actual), [
+                'tests.test_util.ControlTestCase',
+                'tests.environment.BasicTestCase',
+                'unittest.case.TestCase',
+                'builtins.object',
+                ])
+
+    def test_get_fully_qualified_inherited_names_self_ABBCD(self):
+        actual = get_fully_qualified_inherited_names(self.clsABBCD)
+        self.assertEqual(list(actual), [
+                'tests.test_util.ControlTestCase.clsABBCD',
+                'tests.test_util.ControlTestCase.clsAB',
+                'tests.test_util.ControlTestCase.clsBC',
+                'tests.test_util.ControlTestCase.clsD',
+                'tests.test_util.ControlTestCase.clsA',
+                'tests.test_util.ControlTestCase.clsB',
+                'tests.test_util.ControlTestCase.clsC',
+                'builtins.object',
+                ])
+
+    class clsA(object):
+        pass
+
+    class clsB(object):
+        pass
+
+    class clsC(object):
+        pass
+
+    class clsD(object):
+        pass
+
+    class clsAB(clsA, clsB):
+        pass
+
+    class clsBC(clsB, clsC):
+        pass
+
+    class clsABBCD(clsAB, clsBC, clsD):
+        pass

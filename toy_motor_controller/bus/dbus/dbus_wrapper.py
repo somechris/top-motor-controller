@@ -17,8 +17,16 @@ class DBus(object):
         self._bus = bus
 
     def init_object(self, obj, path):
-        logger.debug(f'Initializing object {obj} at path {path}')
+        try:
+            logger.debug(f'Initializing object {obj} at path {path}')
+        except Exception:
+            name = obj.__class__.__name__
+            logger.debug(f'Initializing object of class {name} at path {path}')
+
         dbus.service.Object.__init__(obj, self._bus, path)
+
+    def _get_raw_dbus(self):
+        return self._bus
 
     def get_object(self, bus, path):
         return self._bus.get_object(bus, path)

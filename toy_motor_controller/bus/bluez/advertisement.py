@@ -9,7 +9,7 @@ from . import get_advertisement_manager
 from . import LE_ADVERTISEMENT_IFACE
 
 
-class Advertisement(dbus.service.Object):
+class Advertisement(toy_motor_controller.bus.dbus.Object):
     def __init__(self):
         super().__init__()
 

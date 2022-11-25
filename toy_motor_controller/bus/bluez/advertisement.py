@@ -7,18 +7,15 @@ import toy_motor_controller.bus.dbus
 
 from . import get_advertisement_manager
 from . import LE_ADVERTISEMENT_IFACE
+from . import Registree
 
 
-class Advertisement(toy_motor_controller.bus.dbus.Object):
+class Advertisement(Registree):
     def __init__(self):
-        super().__init__()
+        super().__init__(get_advertisement_manager())
 
         self._local_name = None
         self._manufacturer_data = None
-
-        self._manager = get_advertisement_manager()
-
-        self._manager.manage(self)
 
     def advertise(self):
         self._manager.advertise(self)
@@ -73,19 +70,3 @@ class Advertisement(toy_motor_controller.bus.dbus.Object):
                          out_signature='')
     def Release(self):
         pass
-
-    @property
-    def address(self):
-        return self._manager.address
-
-    @property
-    def address_type(self):
-        return self._manager.address_type
-
-    @property
-    def name(self):
-        return self._manager.name
-
-    @property
-    def alias(self):
-        return self._manager.alias

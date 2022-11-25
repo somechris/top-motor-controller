@@ -50,6 +50,7 @@ def restart_scanners():
         scanner.restart()
 
 
+from .registree import Registree
 from .advertisement import Advertisement
 from .peripheral import Peripheral
 from .characteristic import Characteristic
@@ -68,6 +69,7 @@ __all__ = (
     Advertisement,
     Characteristic,
     Peripheral,
+    Registree,
     RegistrationManager,
     RegistrationError,
     ScannedAdvertisement,

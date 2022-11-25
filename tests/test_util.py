@@ -15,6 +15,8 @@ from toy_motor_controller.util import get_fully_qualified_inherited_names
 from toy_motor_controller.util import get_fully_qualified_name
 from toy_motor_controller.util import normalize_mac_address
 from toy_motor_controller.util import normalize_mac_addresses
+from toy_motor_controller.util import dict_get_str_or_None
+from toy_motor_controller.util import dict_get_int_or_None
 
 
 class ControlTestCase(BasicTestCase):
@@ -243,6 +245,40 @@ class ControlTestCase(BasicTestCase):
                 '98:AB:76:cd:54:EF',
                 ])
         self.assertEqual(actual, ['ab:67:cd:89:ef:01', '98:ab:76:cd:54:ef'])
+
+    def test_dict_get_str_or_None_None(self):
+        self.assertIsNone(dict_get_str_or_None(None, 'bar'))
+
+    def test_dict_get_str_or_None_number(self):
+        self.assertIsNone(dict_get_str_or_None(3, 'bar'))
+
+    def test_dict_get_str_or_None_string(self):
+        self.assertIsNone(dict_get_str_or_None('foo', 'bar'))
+
+    def test_dict_get_str_or_None_string_value(self):
+        actual = dict_get_str_or_None({'foo': 'quux', 'bar': 'foo'}, 'bar')
+        self.assertEqual(actual, 'foo')
+
+    def test_dict_get_str_or_None_number_value(self):
+        actual = dict_get_str_or_None({'foo': 'quux', 'bar': 42}, 'bar')
+        self.assertEqual(actual, '42')
+
+    def test_dict_get_int_or_None_None(self):
+        self.assertIsNone(dict_get_int_or_None(None, 'bar'))
+
+    def test_dict_get_int_or_None_number(self):
+        self.assertIsNone(dict_get_int_or_None(3, 'bar'))
+
+    def test_dict_get_int_or_None_string(self):
+        self.assertIsNone(dict_get_int_or_None('foo', 'bar'))
+
+    def test_dict_get_int_or_None_string_value(self):
+        actual = dict_get_int_or_None({'foo': 'quux', 'bar': '42'}, 'bar')
+        self.assertEqual(actual, 42)
+
+    def test_dict_get_int_or_None_number_value(self):
+        actual = dict_get_int_or_None({'foo': 'quux', 'bar': 42}, 'bar')
+        self.assertEqual(actual, 42)
 
     class clsA(object):
         pass

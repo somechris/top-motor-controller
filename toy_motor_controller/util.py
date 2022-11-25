@@ -2,6 +2,7 @@
 # GNU Affero General Public License v3.0 only (See LICENSE.txt)
 # SPDX-License-Identifier: AGPL-3.0-only
 
+import collections.abc
 import random
 
 import logging
@@ -81,3 +82,29 @@ def normalize_mac_address(address):
 
 def normalize_mac_addresses(addresses):
     return [normalize_mac_address(address) for address in addresses]
+
+
+def dict_get_str_or_None(obj, key):
+    if dict is None:
+        return None
+
+    if not isinstance(obj, collections.abc.Mapping):
+        return None
+
+    if key not in obj:
+        return None
+
+    return str(obj[key])
+
+
+def dict_get_int_or_None(obj, key):
+    if dict is None:
+        return None
+
+    if not isinstance(obj, collections.abc.Mapping):
+        return None
+
+    if key not in obj:
+        return None
+
+    return int(obj[key])

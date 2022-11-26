@@ -6,8 +6,8 @@ import toy_motor_controller.bus.dbus
 
 
 class Registree(toy_motor_controller.bus.dbus.Object):
-    def __init__(self, manager):
-        super().__init__()
+    def __init__(self, manager, **kwargs):
+        super().__init__(**kwargs)
 
         self._manager = manager
         self._manager.manage(self)

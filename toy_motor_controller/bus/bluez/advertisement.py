@@ -5,14 +5,18 @@
 import dbus.service
 import toy_motor_controller.bus.dbus
 
+from toy_motor_controller.bus.dbus import PropertiesObject
+
 from . import get_advertisement_manager
 from . import LE_ADVERTISEMENT_IFACE
 from . import Registree
 
 
-class Advertisement(Registree):
+class Advertisement(Registree, PropertiesObject):
     def __init__(self):
-        super().__init__(get_advertisement_manager())
+        super().__init__(
+            manager=get_advertisement_manager(),
+            main_interface=LE_ADVERTISEMENT_IFACE)
 
         self._local_name = None
         self._manufacturer_data = None
@@ -37,13 +41,7 @@ class Advertisement(Registree):
 
         self._manager.update(self)
 
-    @dbus.service.method(toy_motor_controller.bus.dbus.PROPS_IFACE,
-                         in_signature='s',
-                         out_signature='a{sv}')
-    def GetAll(self, interface):
-        if interface != LE_ADVERTISEMENT_IFACE:
-            raise toy_motor_controller.bus.dbus.InvalidArgsException()
-
+    def _get_main_interface_properties(self):
         properties = {
             'Type': dbus.String('peripheral'),
             'MinInterval': dbus.UInt32(50),

@@ -12,13 +12,13 @@ logger = logging.getLogger(__name__)
 
 
 class Object(dbus.service.Object):
-    def __init__(self):
+    def __init__(self, **kwargs):
         bus = toy_motor_controller.bus.dbus.get_dbus()
         object_registry = toy_motor_controller.bus.dbus.\
             get_dbus_object_registry()
         path = object_registry.create_path(self)
         logger.debug(f'Registering {self.__class__.__name__} at {path}')
-        super().__init__(bus._get_raw_dbus(), path)
+        super().__init__(bus._get_raw_dbus(), path, **kwargs)
 
     @property
     def dbus_path(self):

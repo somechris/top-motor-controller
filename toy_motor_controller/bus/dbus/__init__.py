@@ -20,6 +20,7 @@ get_dbus_object_registry = singleton_getter(
 
 
 from .object import Object
+from .properties_object import PropertiesObject
 
 __all__ = (
     get_dbus,
@@ -27,7 +28,8 @@ __all__ = (
     OM_IFACE,
     PROPS_IFACE,
     InvalidArgsException,
-    Object
+    Object,
+    PropertiesObject,
     )
 
 __version__ = __version__

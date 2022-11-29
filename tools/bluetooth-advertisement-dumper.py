@@ -160,14 +160,6 @@ def parse_arguments():
         help='Turns all --dump-* arguments on')
 
     parser.add_argument(
-        '--dump-services',
-        action='store_true',
-        help='try to dump service data. This will get the scanner stuck, if '
-        'a device does not support service data extraction. Use "--address" '
-        'to limit to a single device, to avoid getting stuck when another '
-        'device\'s advertisement gets scanned before the target device.')
-
-    parser.add_argument(
         '--dump-characteristic-readable-data',
         action='store_true',
         help='Dumps the data that can be read from dumped characteristics. '
@@ -184,6 +176,14 @@ def parse_arguments():
         action='store_true',
         help='Dump descriptors for each dumped characteristic. This implies '
         '--dump-characteristics')
+
+    parser.add_argument(
+        '--dump-services',
+        action='store_true',
+        help='try to dump service data. This will get the scanner stuck, if '
+        'a device does not support service data extraction. Use "--address" '
+        'to limit to a single device, to avoid getting stuck when another '
+        'device\'s advertisement gets scanned before the target device.')
 
     parser.add_argument(
         '--ignore-readvertisements',

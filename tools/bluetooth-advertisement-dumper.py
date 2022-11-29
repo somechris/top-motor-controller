@@ -100,14 +100,14 @@ def dump_advertisement(advertisement, args):
 
 def get_dumper(args):
     address = args.address
-    min_rssi = args.min_rssi
+    ignore_rssi_below = args.ignore_rssi_below
     if address is not None:
         address = address.lower()
 
     seen_macs = {}
 
     def dumper(advertisement):
-        if min_rssi is None or min_rssi <= advertisement.rssi:
+        if ignore_rssi_below is None or ignore_rssi_below < advertisement.rssi:
             advertisement_address = advertisement.address.lower()
             if address is None or address == advertisement_address:
                 if not args.ignore_readvertisements or \
@@ -191,7 +191,7 @@ def parse_arguments():
         help='Only show the first advertisement of a MAC address')
 
     parser.add_argument(
-        '--min-rssi',
+        '--ignore-rssi-below',
         type=int, default=None,
         help='Hide advertisements with rssi below this value')
 

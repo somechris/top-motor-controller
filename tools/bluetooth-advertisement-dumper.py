@@ -102,6 +102,7 @@ def dump_advertisement(advertisement, args):
 
 def get_dumper(args):
     required_address = normalize_mac_address(args.address)
+    ignored_address = normalize_mac_address(args.ignore_address)
     seen_addresses = {}
 
     def discard_rssi(rssi):
@@ -114,6 +115,11 @@ def get_dumper(args):
         if required_address is not None:
             if address != required_address:
                 return True
+
+        if ignored_address is not None:
+            if address == ignored_address:
+                return True
+
         return False
 
     def discard_address_type(address_type):
@@ -217,6 +223,10 @@ def parse_arguments():
         '--dump-services',
         action='store_true',
         help='dump service data of connectable devices.')
+
+    parser.add_argument(
+        '--ignore-address',
+        help='ignore advertisements of a MAC address')
 
     parser.add_argument(
         '--ignore-readvertisements',

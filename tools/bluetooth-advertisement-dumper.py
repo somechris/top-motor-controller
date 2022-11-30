@@ -132,6 +132,17 @@ def get_dumper(args):
 
         return False
 
+    def discard_manufacturer_data(manufacturer_data):
+        if args.manufacturer_prefix is not None and \
+                not manufacturer_data.startswith(args.manufacturer_prefix):
+            return True
+
+        if args.ignore_manufacturer_prefix is not None and \
+                manufacturer_data.startswith(args.ignore_manufacturer_prefix):
+            return True
+
+        return False
+
     def dumper(advertisement):
         if discard_rssi(advertisement.rssi):
             return
@@ -141,6 +152,10 @@ def get_dumper(args):
 
         address = normalize_mac_address(advertisement.address)
         if discard_address(address):
+            return
+
+        manufacturer_data = advertisement.data.get('Manufacturer', '')
+        if discard_manufacturer_data(manufacturer_data):
             return
 
         # All conditions met, so we dump the advertisement.
@@ -244,6 +259,12 @@ def parse_arguments():
         help='ignore advertisements having this address type')
 
     parser.add_argument(
+        '--ignore-manufacturer-prefix',
+        default=None,
+        help='ignore advertisements having manufacturer data starting with '
+        'this prefix.')
+
+    parser.add_argument(
         '--ignore-readvertisements',
         action='store_true',
         help='Only show the first advertisement of a MAC address')
@@ -252,6 +273,12 @@ def parse_arguments():
         '--ignore-rssi-below',
         type=int, default=None,
         help='Hide advertisements with rssi below this value')
+
+    parser.add_argument(
+        '--manufacturer-prefix',
+        default=None,
+        help='only show matches where the manufacturer data starts with this '
+        'prefix')
 
     parser.add_argument(
         '--mnemonics',

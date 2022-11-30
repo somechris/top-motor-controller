@@ -11,6 +11,7 @@ from bluepy import btle
 import toy_motor_controller
 from toy_motor_controller.bus.bluez import get_scanner, Peripheral
 from toy_motor_controller.util import bytes_to_hex_string
+from toy_motor_controller.util import normalize_mac_address
 
 LOG_FORMAT = ('%(asctime)s.%(msecs)03d %(levelname)-5s [%(threadName)s] '
               '%(filename)s:%(lineno)d - %(message)s')
@@ -99,21 +100,33 @@ def dump_advertisement(advertisement, args):
 
 
 def get_dumper(args):
-    address = args.address
-    ignore_rssi_below = args.ignore_rssi_below
-    if address is not None:
-        address = address.lower()
+    required_address = normalize_mac_address(args.address)
+    seen_addresses = {}
 
-    seen_macs = {}
+    def discard_rssi(rssi):
+        if args.ignore_rssi_below is not None:
+            if rssi < args.ignore_rssi_below:
+                return True
+        return False
+
+    def discard_address(address):
+        if required_address is not None:
+            if address != required_address:
+                return True
+        return False
 
     def dumper(advertisement):
-        if ignore_rssi_below is None or ignore_rssi_below < advertisement.rssi:
-            advertisement_address = advertisement.address.lower()
-            if address is None or address == advertisement_address:
-                if not args.ignore_readvertisements or \
-                        advertisement_address not in seen_macs:
-                    dump_advertisement(advertisement, args)
-                    seen_macs[advertisement_address] = 0
+        if discard_rssi(advertisement.rssi):
+            return
+
+        address = normalize_mac_address(advertisement.address)
+        if discard_address(address):
+            return
+
+        # All conditions met, so we dump the advertisement.
+        dump_advertisement(advertisement, args)
+
+        seen_addresses[address] = 0
 
     return dumper
 

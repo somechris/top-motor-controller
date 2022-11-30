@@ -4,16 +4,15 @@
 
 from tests import BasicTestCase
 
-from toy_motor_controller.util import \
-    randombyte, \
-    bytes_to_hex_string, \
-    hex_string_to_bytes, \
-    clamped, \
-    clamped_int, \
-    get_fully_qualified_class_name, \
-    get_fully_qualified_inherited_class_names, \
-    get_fully_qualified_inherited_names, \
-    get_fully_qualified_name
+from toy_motor_controller.util import randombyte
+from toy_motor_controller.util import bytes_to_hex_string
+from toy_motor_controller.util import hex_string_to_bytes
+from toy_motor_controller.util import clamped
+from toy_motor_controller.util import clamped_int
+from toy_motor_controller.util import get_fully_qualified_class_name
+from toy_motor_controller.util import get_fully_qualified_inherited_class_names
+from toy_motor_controller.util import get_fully_qualified_inherited_names
+from toy_motor_controller.util import get_fully_qualified_name
 
 
 class ControlTestCase(BasicTestCase):

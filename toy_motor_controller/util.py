@@ -77,3 +77,7 @@ def get_fully_qualified_inherited_class_names(obj):
 
 def normalize_mac_address(address):
     return None if address is None else address.lower()
+
+
+def normalize_mac_addresses(addresses):
+    return [normalize_mac_address(address) for address in addresses]

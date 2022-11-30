@@ -12,6 +12,7 @@ import toy_motor_controller
 from toy_motor_controller.bus.bluez import get_scanner, Peripheral
 from toy_motor_controller.util import bytes_to_hex_string
 from toy_motor_controller.util import normalize_mac_address
+from toy_motor_controller.util import normalize_mac_addresses
 
 LOG_FORMAT = ('%(asctime)s.%(msecs)03d %(levelname)-5s [%(threadName)s] '
               '%(filename)s:%(lineno)d - %(message)s')
@@ -101,8 +102,8 @@ def dump_advertisement(advertisement, args):
 
 
 def get_dumper(args):
-    required_address = normalize_mac_address(args.address)
-    ignored_address = normalize_mac_address(args.ignore_address)
+    required_addresses = normalize_mac_addresses(args.address)
+    ignored_addresses = normalize_mac_addresses(args.ignore_address)
     seen_addresses = {}
 
     def discard_rssi(rssi):
@@ -112,13 +113,11 @@ def get_dumper(args):
         return False
 
     def discard_address(address):
-        if required_address is not None:
-            if address != required_address:
-                return True
+        if required_addresses and address not in required_addresses:
+            return True
 
-        if ignored_address is not None:
-            if address == ignored_address:
-                return True
+        if ignored_addresses and address in ignored_addresses:
+            return True
 
         return False
 
@@ -185,8 +184,10 @@ def parse_arguments():
 
     parser.add_argument(
         '--address',
-        default=None,
-        help='only show matches from this address')
+        action='append',
+        default=[],
+        help='only show matches from this address. When supplied multiple '
+        'times, advertisements from any of the given addresses are accepted.')
 
     parser.add_argument(
         '--address-type',
@@ -231,7 +232,10 @@ def parse_arguments():
 
     parser.add_argument(
         '--ignore-address',
-        help='ignore advertisements of a MAC address')
+        action='append',
+        default=[],
+        help='ignore advertisements of a MAC address. When supplied multiple '
+        'times, advertisements from any of the given addresses get ignored.')
 
     parser.add_argument(
         '--ignore-address-type',

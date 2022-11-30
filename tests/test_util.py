@@ -14,6 +14,7 @@ from toy_motor_controller.util import get_fully_qualified_inherited_class_names
 from toy_motor_controller.util import get_fully_qualified_inherited_names
 from toy_motor_controller.util import get_fully_qualified_name
 from toy_motor_controller.util import normalize_mac_address
+from toy_motor_controller.util import normalize_mac_addresses
 
 
 class ControlTestCase(BasicTestCase):
@@ -227,6 +228,21 @@ class ControlTestCase(BasicTestCase):
     def test_normalize_mac_address_mixed_case(self):
         actual = normalize_mac_address('aB:67:cd:89:EF:01')
         self.assertEqual(actual, 'ab:67:cd:89:ef:01')
+
+    def test_normalize_mac_addresses_empty(self):
+        actual = normalize_mac_addresses([])
+        self.assertEqual(actual, [])
+
+    def test_normalize_mac_addresses_single(self):
+        actual = normalize_mac_addresses(['aB:67:cd:89:EF:01'])
+        self.assertEqual(actual, ['ab:67:cd:89:ef:01'])
+
+    def test_normalize_mac_addresses_multiple(self):
+        actual = normalize_mac_addresses([
+                'aB:67:cd:89:EF:01',
+                '98:AB:76:cd:54:EF',
+                ])
+        self.assertEqual(actual, ['ab:67:cd:89:ef:01', '98:ab:76:cd:54:ef'])
 
     class clsA(object):
         pass

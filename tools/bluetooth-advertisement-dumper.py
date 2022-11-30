@@ -126,6 +126,11 @@ def get_dumper(args):
         if args.address_type is not None:
             if address_type != args.address_type:
                 return True
+
+        if args.ignore_address_type is not None:
+            if address_type == args.ignore_address_type:
+                return True
+
         return False
 
     def dumper(advertisement):
@@ -227,6 +232,12 @@ def parse_arguments():
     parser.add_argument(
         '--ignore-address',
         help='ignore advertisements of a MAC address')
+
+    parser.add_argument(
+        '--ignore-address-type',
+        choices=['random', 'public'],
+        default=None,
+        help='ignore advertisements having this address type')
 
     parser.add_argument(
         '--ignore-readvertisements',

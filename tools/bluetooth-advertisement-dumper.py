@@ -96,7 +96,8 @@ def dump_advertisement(advertisement, args):
     print(advertisement.__str__(raw_data=str_arg))
 
     if args.dump_services or args.dump_all:
-        dump_services(advertisement.address, args)
+        if advertisement.connectable or args.consider_all_devices_connectable:
+            dump_services(advertisement.address, args)
 
 
 def get_dumper(args):
@@ -183,6 +184,13 @@ def parse_arguments():
         help='only show matches from this address type')
 
     parser.add_argument(
+        '--consider-all-devices-connectable',
+        action='store_true',
+        help='consider all devices connectable, even if they do not seem'
+        'connectable. This will get the scanner stuck, if a device really '
+        'cannot be connected. See "--address" to limit to a single device.')
+
+    parser.add_argument(
         '--dump-all',
         action='store_true',
         help='Turns all --dump-* arguments on')
@@ -208,10 +216,7 @@ def parse_arguments():
     parser.add_argument(
         '--dump-services',
         action='store_true',
-        help='try to dump service data. This will get the scanner stuck, if '
-        'a device does not support service data extraction. Use "--address" '
-        'to limit to a single device, to avoid getting stuck when another '
-        'device\'s advertisement gets scanned before the target device.')
+        help='dump service data of connectable devices.')
 
     parser.add_argument(
         '--ignore-readvertisements',

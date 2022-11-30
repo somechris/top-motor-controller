@@ -143,6 +143,17 @@ def get_dumper(args):
 
         return False
 
+    def discard_complete_local_name(name):
+        if args.complete_local_name_prefix is not None and \
+                not name.startswith(args.complete_local_name_prefix):
+            return True
+
+        if args.ignore_complete_local_name_prefix is not None and \
+                name.startswith(args.ignore_complete_local_name_prefix):
+            return True
+
+        return False
+
     def dumper(advertisement):
         if discard_rssi(advertisement.rssi):
             return
@@ -156,6 +167,10 @@ def get_dumper(args):
 
         manufacturer_data = advertisement.data.get('Manufacturer', '')
         if discard_manufacturer_data(manufacturer_data):
+            return
+
+        complete_local_name = advertisement.data.get('Complete Local Name', '')
+        if discard_complete_local_name(complete_local_name):
             return
 
         # All conditions met, so we dump the advertisement.
@@ -211,6 +226,12 @@ def parse_arguments():
         help='only show matches from this address type')
 
     parser.add_argument(
+        '--complete-local-name-prefix',
+        default=None,
+        help='only show matches where the complete local name starts with '
+        'this prefix')
+
+    parser.add_argument(
         '--consider-all-devices-connectable',
         action='store_true',
         help='consider all devices connectable, even if they do not seem'
@@ -263,6 +284,12 @@ def parse_arguments():
         default=None,
         help='ignore advertisements having manufacturer data starting with '
         'this prefix.')
+
+    parser.add_argument(
+        '--ignore-complete-local-name-prefix',
+        default=None,
+        help='ignore advertisements having a complete local name starting '
+        'with this prefix.')
 
     parser.add_argument(
         '--ignore-readvertisements',

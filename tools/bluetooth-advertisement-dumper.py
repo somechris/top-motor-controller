@@ -115,8 +115,17 @@ def get_dumper(args):
                 return True
         return False
 
+    def discard_address_type(address_type):
+        if args.address_type is not None:
+            if address_type != args.address_type:
+                return True
+        return False
+
     def dumper(advertisement):
         if discard_rssi(advertisement.rssi):
+            return
+
+        if discard_address_type(advertisement.addressType):
             return
 
         address = normalize_mac_address(advertisement.address)
@@ -166,6 +175,12 @@ def parse_arguments():
         '--address',
         default=None,
         help='only show matches from this address')
+
+    parser.add_argument(
+        '--address-type',
+        choices=['random', 'public'],
+        default=None,
+        help='only show matches from this address type')
 
     parser.add_argument(
         '--dump-all',

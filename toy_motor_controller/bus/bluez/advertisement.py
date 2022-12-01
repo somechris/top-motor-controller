@@ -35,19 +35,19 @@ class Advertisement(Registree, PropertiesObject):
             company_data = dbus.Array(data[2:], signature='y')
             self._manufacturer_data[company_id] = company_data
 
-        self._manager.update(self)
+        self.update()
 
     def _set_local_name(self, local_name):
         self._local_name = local_name
 
-        self._manager.update(self)
+        self.update()
 
     def _set_data(self, type_, value):
         if self._data is None:
             self._data = {}
         self._data[type_] = dbus.Array(value, signature='y')
 
-        self._manager.update(self)
+        self.update()
 
     def _get_main_interface_properties(self):
         properties = {

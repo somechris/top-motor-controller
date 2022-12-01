@@ -18,6 +18,9 @@ class Registree(toy_motor_controller.bus.dbus.Object):
     def unregister(self):
         self._manager.unregister(self)
 
+    def update(self):
+        self._manager.update(self)
+
     @property
     def address(self):
         return self._manager.address

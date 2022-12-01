@@ -66,8 +66,8 @@ class Descriptor(PropertiesObject):
         byte_value = [int(byte) for byte in value]
         self.write(byte_value, **normalize_io_options(options))
 
-    def read_value(self, offset, device, mtu):
-        raise NotImplementedError()
+    def read(self, address, offset, link, mtu, type_):
+        return []
 
     def write(self, value, address, offset, link, mtu, type_):
-        raise NotImplementedError()
+        pass

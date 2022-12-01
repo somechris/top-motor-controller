@@ -70,6 +70,7 @@ from .characteristic import Characteristic
 from .descriptor import Descriptor
 from .advertised_application import AdvertisedApplication
 from .logging_characteristic import LoggingCharacteristic
+from .logging_descriptor import LoggingDescriptor
 
 dbus_object_registry = get_dbus_object_registry()
 dbus_object_registry.map_name(
@@ -103,6 +104,7 @@ __all__ = (
     Characteristic,
     Descriptor,
     LoggingCharacteristic,
+    LoggingDescriptor,
     Peripheral,
     Registree,
     RegistrationManager,

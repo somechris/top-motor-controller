@@ -68,6 +68,7 @@ from .application import Application
 from .service import Service
 from .characteristic import Characteristic
 from .descriptor import Descriptor
+from .advertised_application import AdvertisedApplication
 
 dbus_object_registry = get_dbus_object_registry()
 dbus_object_registry.map_name(
@@ -96,6 +97,7 @@ __all__ = (
     normalize_io_options,
     restart_scanners,
     Advertisement,
+    AdvertisedApplication,
     Application,
     Characteristic,
     Descriptor,

@@ -20,6 +20,7 @@ class Advertisement(Registree, PropertiesObject):
 
         self._local_name = None
         self._manufacturer_data = None
+        self._data = None
 
     def advertise(self):
         self._manager.advertise(self)
@@ -41,6 +42,13 @@ class Advertisement(Registree, PropertiesObject):
 
         self._manager.update(self)
 
+    def _set_data(self, type_, value):
+        if self._data is None:
+            self._data = {}
+        self._data[type_] = dbus.Array(value, signature='y')
+
+        self._manager.update(self)
+
     def _get_main_interface_properties(self):
         properties = {
             'Type': dbus.String('peripheral'),
@@ -54,6 +62,11 @@ class Advertisement(Registree, PropertiesObject):
         if self._manufacturer_data is not None:
             properties['ManufacturerData'] = dbus.Dictionary(
                 self._manufacturer_data, signature='qv')
+
+        if self._data is not None:
+            properties['Data'] = dbus.Dictionary({}, signature='yv')
+            for key, value in self._data.items():
+                properties['Data'][key] = dbus.Array(value, signature='y')
 
         return properties
 

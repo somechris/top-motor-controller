@@ -23,10 +23,10 @@ class Advertisement(Registree, PropertiesObject):
         self._data = None
 
     def advertise(self):
-        self._manager.advertise(self)
+        self.register()
 
     def unadvertise(self):
-        self._manager.unadvertise(self)
+        self.unregister()
 
     def _set_manufacturer_data(self, data):
         self._manufacturer_data = dbus.Dictionary({}, signature='qv')

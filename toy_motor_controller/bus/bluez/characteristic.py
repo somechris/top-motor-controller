@@ -120,10 +120,10 @@ class Characteristic(PropertiesObject):
     def PropertiesChanged(self, interface, changed, invalidated):
         pass
 
-    def read(self, address, offset, link, mtu, type_):
+    def read(self, address, offset, link, mtu, type_, device_path):
         return []
 
-    def write(self, value, address, offset, link, mtu, type_):
+    def write(self, value, address, offset, link, mtu, type_, device_path):
         pass
 
     def start_notify(self):

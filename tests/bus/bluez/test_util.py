@@ -36,6 +36,7 @@ class UtilTestCase(BasicTestCase):
                 'link': 'LE',
                 'mtu': 23,
                 'type_': 'foo',
+                'device_path': '/org/bluez/hci0/dev_AB_CD_EF_01_23_45',
                 })
 
     def test_normalize_io_options_None_dict(self):
@@ -47,6 +48,7 @@ class UtilTestCase(BasicTestCase):
                 'link': None,
                 'mtu': None,
                 'type_': None,
+                'device_path': None,
                 })
 
     def test_normalize_io_options_missing_all_values(self):
@@ -58,6 +60,7 @@ class UtilTestCase(BasicTestCase):
                 'link': None,
                 'mtu': None,
                 'type_': None,
+                'device_path': None,
                 })
 
     def test_normalize_io_options_missing_some_values(self):
@@ -73,4 +76,5 @@ class UtilTestCase(BasicTestCase):
                 'link': None,
                 'mtu': 23,
                 'type_': None,
+                'device_path': '/org/bluez/hci0/dev_AB_CD_EF_01_23_45',
                 })

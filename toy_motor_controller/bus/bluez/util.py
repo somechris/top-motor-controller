@@ -15,11 +15,12 @@ def convert_device_object_path_to_mac_address(object_path):
 
 
 def normalize_io_options(options):
+    device_path = dict_get_str_or_None(options, 'device')
     return {
-        'address': convert_device_object_path_to_mac_address(
-            dict_get_str_or_None(options, 'device')),
+        'address': convert_device_object_path_to_mac_address(device_path),
         'offset': dict_get_int_or_None(options, 'offset'),
         'link': dict_get_str_or_None(options, 'link'),
         'mtu': dict_get_int_or_None(options, 'mtu'),
         'type_': dict_get_str_or_None(options, 'type'),
+        'device_path': device_path,
         }

@@ -9,17 +9,18 @@ logger = logging.getLogger(__name__)
 
 
 class LoggingCharacteristic(Characteristic):
-    def read(self, address, offset, link, mtu, type_):
+    def read(self, address, offset, link, mtu, type_, device_path):
         logger.info(
             f'Read of characteristic={self}, address={address}, '
-            f'offset={offset}, link={link}, mtu={mtu}, type={type_}')
+            f'offset={offset}, link={link}, mtu={mtu}, type={type_}, '
+            f'device_path={device_path}')
         return []
 
-    def write(self, value, address, offset, link, mtu, type_):
+    def write(self, value, address, offset, link, mtu, type_, device_path):
         logger.info(
             f'Write of value {value} to characteristic={self}, '
             f'address={address}, offset={offset}, link={link}, mtu={mtu}, '
-            f'type={type_}')
+            f'type={type_}, device_path={device_path}')
 
     def start_notify(self):
         logger.info('Start notify')

@@ -13,10 +13,11 @@ from . import Registree
 
 
 class Advertisement(Registree, PropertiesObject):
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__(
             manager=get_advertisement_manager(),
-            main_interface=LE_ADVERTISEMENT_IFACE)
+            main_interface=LE_ADVERTISEMENT_IFACE,
+            **kwargs)
 
         self._local_name = None
         self._manufacturer_data = None

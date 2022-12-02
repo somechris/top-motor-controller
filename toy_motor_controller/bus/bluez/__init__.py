@@ -44,9 +44,9 @@ from .scanner import Scanner
 SCANNER = {}
 
 get_scanner_active = singleton_getter(
-    Scanner, lambda: {'active': True}, 'active', SCANNER)
+    Scanner, lambda: (True,), key='active', registry=SCANNER)
 get_scanner_passive = singleton_getter(
-    Scanner, lambda: {'active': False}, 'passive', SCANNER)
+    Scanner, lambda: (False,), key='passive', registry=SCANNER)
 
 
 def get_scanner(active=False):

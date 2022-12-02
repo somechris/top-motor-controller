@@ -34,6 +34,10 @@ class DBus(object):
     def get_iface(self, obj, iface):
         return dbus.Interface(obj, iface)
 
+    def get_object_iface(self, bus, path, iface):
+        obj = self.get_object(bus, path)
+        return self.get_iface(obj, iface)
+
     def get_om_iface(self, obj):
         return self.get_iface(obj, OM_IFACE)
 

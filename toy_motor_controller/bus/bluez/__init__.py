@@ -4,6 +4,8 @@
 
 from .. import __version__
 
+SERVICE_NAME = 'org.bluez'
+
 from toy_motor_controller.util import singleton_getter
 from toy_motor_controller.util import get_fully_qualified_name
 from toy_motor_controller.bus.dbus import get_dbus_object_registry
@@ -11,7 +13,6 @@ from toy_motor_controller.bus.dbus import get_dbus_object_registry
 import logging
 logger = logging.getLogger(__name__)
 
-SERVICE_NAME = 'org.bluez'
 ADAPTER_IFACE = 'org.bluez.Adapter1'
 
 LE_ADVERTISING_MANAGER_IFACE = 'org.bluez.LEAdvertisingManager1'
@@ -24,6 +25,7 @@ GATT_DESCRIPTOR_IFACE = 'org.bluez.GattDescriptor1'
 
 from .util import convert_device_object_path_to_mac_address
 from .util import normalize_io_options
+from .util import get_object_interface
 
 from .adapter import Adapter
 from .registration_error import RegistrationError
@@ -93,6 +95,7 @@ __all__ = (
     convert_device_object_path_to_mac_address,
     get_advertisement_manager,
     get_application_manager,
+    get_object_interface,
     get_scanner,
     get_scanner_active,
     get_scanner_passive,

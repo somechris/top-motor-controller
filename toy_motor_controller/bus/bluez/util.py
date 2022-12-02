@@ -2,6 +2,8 @@
 # GNU Affero General Public License v3.0 only (See LICENSE.txt)
 # SPDX-License-Identifier: AGPL-3.0-only
 
+from . import SERVICE_NAME
+from toy_motor_controller.bus.dbus import get_dbus
 from toy_motor_controller.util import normalize_mac_address
 from toy_motor_controller.util import dict_get_int_or_None
 from toy_motor_controller.util import dict_get_str_or_None
@@ -24,3 +26,8 @@ def normalize_io_options(options):
         'type_': dict_get_str_or_None(options, 'type'),
         'device_path': device_path,
         }
+
+
+def get_object_interface(path, interface):
+    bus = get_dbus()
+    return bus.get_object_iface(SERVICE_NAME, path, interface)

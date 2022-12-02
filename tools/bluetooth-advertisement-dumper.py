@@ -6,6 +6,8 @@
 import argparse
 import logging
 
+from datetime import datetime
+
 from bluepy import btle
 
 import toy_motor_controller
@@ -19,6 +21,11 @@ LOG_FORMAT = ('%(asctime)s.%(msecs)03d %(levelname)-5s [%(threadName)s] '
 LOG_DATE_FORMAT = '%Y-%m-%dT%H:%M:%S'
 logging.basicConfig(format=LOG_FORMAT, datefmt=LOG_DATE_FORMAT)
 logger = logging.getLogger(__name__)
+
+
+def timestamped_print(*args, **kwargs):
+    timestamp = datetime.now().isoformat(timespec='microseconds')
+    print(timestamp, *args, **kwargs)
 
 
 def dump_uuid(uuid, args):
@@ -36,9 +43,10 @@ def dump_uuid(uuid, args):
 
 
 def dump_descriptor(descriptor, args):
-    print('      Descriptor('
-          f'handle={descriptor.handle}, '
-          f'{dump_uuid(descriptor.uuid, args)})')
+    args.output(
+        '      Descriptor('
+        f'handle={descriptor.handle}, '
+        f'{dump_uuid(descriptor.uuid, args)})')
 
 
 def dump_characteristic(characteristic, args):
@@ -46,22 +54,23 @@ def dump_characteristic(characteristic, args):
                   for (mask, name) in btle.Characteristic.propNames.items()
                   if ((characteristic.properties & mask) == mask)
                   ]
-    print('    Characteristic('
-          f'handle={characteristic.handle}, '
-          f'val_handle={characteristic.valHandle}, '
-          f'{dump_uuid(characteristic.uuid, args)}, '
-          f'properties={properties})')
+    args.output(
+        '    Characteristic('
+        f'handle={characteristic.handle}, '
+        f'val_handle={characteristic.valHandle}, '
+        f'{dump_uuid(characteristic.uuid, args)}, '
+        f'properties={properties})')
     if (args.dump_characteristic_readable_data or args.dump_all) \
             and characteristic.supportsRead():
         data = characteristic.read()
         try:
-            print(f'        data (utf8): {data.decode()}')
+            args.output(f'        data (utf8): {data.decode()}')
         except UnicodeDecodeError:
             # data cannot get decoded to utf8. So we skip it.
             pass
-        print(f'        data  (hex): {bytes_to_hex_string(data, " ")}')
-        print(f'        data  (raw): {data}')
-        print(f'        data  (len): {len(data)}')
+        args.output(f'        data  (hex): {bytes_to_hex_string(data, " ")}')
+        args.output(f'        data  (raw): {data}')
+        args.output(f'        data  (len): {len(data)}')
 
     if args.dump_descriptors or args.dump_all:
         for descriptor in characteristic.getDescriptors():
@@ -69,9 +78,10 @@ def dump_characteristic(characteristic, args):
 
 
 def dump_service(service, args):
-    print(f'  Service({dump_uuid(service.uuid, args)}, '
-          f'handle_start={service.hndStart}, '
-          f'handle_end={service.hndEnd})')
+    args.output(
+        f'  Service({dump_uuid(service.uuid, args)}, '
+        f'handle_start={service.hndStart}, '
+        f'handle_end={service.hndEnd})')
     if args.dump_characteristics or args.dump_all:
         for characteristic in service.getCharacteristics():
             dump_characteristic(characteristic, args)
@@ -82,7 +92,7 @@ def dump_services(address, args):
     for service in device._getServices():
         dump_service(service, args)
     device.disconnect()
-    print('---')
+    args.output('---')
 
 
 def dump_advertisement(advertisement, args):
@@ -94,7 +104,7 @@ def dump_advertisement(advertisement, args):
         str_arg = None
     else:
         raise RuntimeError('Logic error')
-    print(advertisement.__str__(raw_data=str_arg))
+    args.output(advertisement.__str__(raw_data=str_arg))
 
     if args.dump_services or args.dump_all:
         if advertisement.connectable or args.consider_all_devices_connectable:
@@ -193,7 +203,7 @@ def main(args):
     scanner.register(dumper)
 
     if not args.silent:
-        print('Press the enter key to stop the scanner')
+        args.output('Press the enter key to stop the scanner')
     input()
 
     logger.debug('Cleaning up')
@@ -317,6 +327,11 @@ def parse_arguments():
         'numbers')
 
     parser.add_argument(
+        '--timestamps',
+        action='store_true',
+        help='adds timestamps to output')
+
+    parser.add_argument(
         '--silent',
         action='store_true',
         help='dump only found advertisements')
@@ -348,5 +363,9 @@ if __name__ == '__main__':
 
     if args.dump_characteristics:
         args.dump_services = True
+
+    args.output = print
+    if args.timestamps:
+        args.output = timestamped_print
 
     main(args)

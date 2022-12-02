@@ -10,8 +10,8 @@ from . import Registree
 
 
 class Application(Registree):
-    def __init__(self):
-        super().__init__(get_application_manager())
+    def __init__(self, **kwargs):
+        super().__init__(manager=get_application_manager(), **kwargs)
         self._services = []
 
     def add(self, service):

@@ -18,13 +18,13 @@ print(f'Device found, connection established: {device}')
 # When pressing buttons on the remote control, this callback will (after
 # registration, see below) produce output like:
 #
-#   Got new state: {'A': 0, 'B': 0, 'C': 0, 'D': 0}
-#   Got new state: {'A': 100, 'B': 0, 'C': 0, 'D': 0}
-#   Got new state: {'A': 0, 'B': 0, 'C': 0, 'D': 0}
-#   Got new state: {'A': 0, 'B': 0, 'C': -100, 'D': -100}
+# New state: {'A': 0, 'B': 0, 'C': 0, 'D': 0}
+# New state: {'A': 100, 'B': 0, 'C': 0, 'D': 0}
+# New state: {'A': 0, 'B': 0, 'C': 0, 'D': 0}
+# New state: {'A': 0, 'B': 0, 'C': -100, 'D': -100}
 #
 def callback(state, old_state):
-    print(f'Got new state: {state}')
+    print(f'New state: {state}')
 
 
 print('Registering callback ...')

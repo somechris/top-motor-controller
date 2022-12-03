@@ -12,6 +12,7 @@ from toy_motor_controller.bus.bluez import get_object_interface
 from toy_motor_controller.bus.bluez import DEVICE_IFACE
 from toy_motor_controller.toy.common import CharacteristicIODiscovery
 
+from . import PlaymobilRacerBase
 
 from toy_motor_controller.util import normalize_mac_address
 
@@ -19,11 +20,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class PlaymobilRacerVehicle(CharacteristicIODiscovery, AdvertisedApplication):
-    COMMAND_SERVICE_UUID = 'bc2f4cc6-aaef-4351-9034-d66268e328f0'
-    COMMAND_CHARACTERISTIC_UUID = '06d1e5e7-79ad-4a71-8faa-373789f7d93c'
-    NAME_PREFIX = 'PM-RC '
-
+class PlaymobilRacerVehicle(PlaymobilRacerBase, CharacteristicIODiscovery,
+                            AdvertisedApplication):
     def __init__(self):
         super().__init__()
 
@@ -34,12 +32,12 @@ class PlaymobilRacerVehicle(CharacteristicIODiscovery, AdvertisedApplication):
 
         # Application setup
 
-        self._service = Service(self.COMMAND_SERVICE_UUID, primary=True)
+        self._service = Service(self.SERVICE_UUID, primary=True)
         self.add(self._service)
 
         self.configure_discovery(
             application=self, service=self._service,
-            uuid=self.COMMAND_CHARACTERISTIC_UUID)
+            uuid=self.CHARACTERISTIC_UUID)
 
         self._reset_state()
         self._state_change_listeners = []
@@ -54,7 +52,7 @@ class PlaymobilRacerVehicle(CharacteristicIODiscovery, AdvertisedApplication):
         # after the remote control connected
 
         characteristic = self.ReceiveCharacteristic(
-            self.COMMAND_CHARACTERISTIC_UUID, address, self._update_state,
+            self.CHARACTERISTIC_UUID, address, self._update_state,
             connection_lock)
         self._service.add(characteristic)
 

@@ -4,11 +4,13 @@
 
 from .. import __version__
 
+from .base import PlaymobilRacerBase
 from .remote_control import PlaymobilRacerRemoteControl
 from .vehicle import PlaymobilRacerVehicle
 
 
 __all__ = (
+    PlaymobilRacerBase,
     PlaymobilRacerRemoteControl,
     PlaymobilRacerVehicle,
     )

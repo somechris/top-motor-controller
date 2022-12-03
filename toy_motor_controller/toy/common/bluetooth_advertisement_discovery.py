@@ -8,11 +8,11 @@ from toy_motor_controller.bus.bluez import get_scanner
 
 
 class BluetoothAdvertisementDiscovery(object):
-    def __init__(self):
+    def __init__(self, **kwargs):
         self._connected = False
         self._scanner = get_scanner()
 
-        super().__init__()
+        super().__init__(**kwargs)
 
     def _get_scanning_callback(self, matches_map):
         raise NotImplementedError()

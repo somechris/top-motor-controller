@@ -46,6 +46,7 @@ class PlaymobilRacerRemoteControl(PlaymobilRacerBase,
                 'address': advertisement.address,
                 'supplement': {
                     'advertisement': advertisement,
+                    'key': -advertisement.rssi,
                     }
                 }
 

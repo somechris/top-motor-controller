@@ -36,6 +36,7 @@ class AkogdPowerFunctionRemoteControl(AkogdPowerFunctionDevice):
                         'H': H,
                         'supplement': {
                             'advertisement': advertisement,
+                            'key': -advertisement.rssi,
                             }
                         }
         return callback

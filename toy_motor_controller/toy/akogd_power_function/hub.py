@@ -36,6 +36,7 @@ class AkogdPowerFunctionHub(AkogdPowerFunctionDevice):
                         'R': R,
                         'supplement': {
                             'advertisement': advertisement,
+                            'key': -advertisement.rssi,
                             }
                         }
         return callback

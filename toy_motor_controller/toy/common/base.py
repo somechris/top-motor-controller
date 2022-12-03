@@ -21,7 +21,8 @@ class DiscoveryBase(object):
     def _stop_scan(self, scan_state):
         raise NotImplementedError()
 
-    def scan(self, first=False, best=False, duration=10):
+    def scan(self, first=False, best=False, duration=10,
+             strip_supplement=True):
         matches_map = {}
         stop_time = (time.time() + duration) if duration is not None else 0
 
@@ -35,6 +36,14 @@ class DiscoveryBase(object):
 
         matches = list(matches_map.values())
         matches.sort(key=lambda x: x.get('supplement', {}).get('key', 0))
+        if strip_supplement:
+            for match in matches:
+                try:
+                    del match['supplement']
+                except KeyError:
+                    # match did not have a supplement.
+                    # So there is nothing to remove
+                    pass
 
         if first or best:
             if matches:

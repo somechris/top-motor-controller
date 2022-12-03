@@ -41,7 +41,7 @@ class AkogdPowerFunctionRemoteControl(AkogdPowerFunctionDevice):
                         }
         return callback
 
-    def connect(self, H, supplement=None):
+    def connect(self, H):
         self._connection_state = 2
         self._H = H
         self._M = [0x80 for i in range(4)]

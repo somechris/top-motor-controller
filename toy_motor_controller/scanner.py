@@ -32,7 +32,7 @@ def scan_class(_class):
 
     print(f'Scanning for {_class.__name__} devices ...')
 
-    for match in instance.scan(duration=duration):
+    for match in instance.scan(duration=duration, strip_supplement=False):
         print()
         print()
         print(f'Found {_class.__name__} device:')

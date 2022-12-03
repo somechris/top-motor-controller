@@ -44,7 +44,7 @@ class PlaymobilRacerVehicle(PlaymobilRacerBase, CharacteristicIODiscovery,
 
     # -- Connection handling -------------------------------------------------
 
-    def connect(self, address, supplement=None):
+    def connect(self, address):
         address = normalize_mac_address(address)
 
         connection_lock = threading.Lock()

@@ -41,7 +41,7 @@ class AkogdPowerFunctionHub(AkogdPowerFunctionDevice):
                         }
         return callback
 
-    def connect(self, R, supplement=None):
+    def connect(self, R):
         self._connection_state = 5
         self._R = R
         self._reset_state()

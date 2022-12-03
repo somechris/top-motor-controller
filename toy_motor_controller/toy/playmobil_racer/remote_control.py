@@ -52,7 +52,7 @@ class PlaymobilRacerRemoteControl(PlaymobilRacerBase,
 
         return callback
 
-    def connect(self, address, supplement=None):
+    def connect(self, address):
         self._remote_address = address
         self._peripheral = Peripheral(address=self._remote_address)
         self._characteristic = self._peripheral.getCharacteristic(

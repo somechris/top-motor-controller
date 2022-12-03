@@ -2,6 +2,8 @@
 # GNU Affero General Public License v3.0 only (See LICENSE.txt)
 # SPDX-License-Identifier: AGPL-3.0-only
 
+import pprint
+
 import dbus.service
 import toy_motor_controller.bus.dbus
 
@@ -10,6 +12,9 @@ from toy_motor_controller.bus.dbus import PropertiesObject
 from . import get_advertisement_manager
 from . import LE_ADVERTISEMENT_IFACE
 from . import Registree
+
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Advertisement(Registree, PropertiesObject):
@@ -68,6 +73,9 @@ class Advertisement(Registree, PropertiesObject):
             properties['Data'] = dbus.Dictionary({}, signature='yv')
             for key, value in self._data.items():
                 properties['Data'][key] = dbus.Array(value, signature='y')
+
+        logger.debug('Properties of Advertisement:\n'
+                     f'{pprint.pformat(properties)}')
 
         return properties
 

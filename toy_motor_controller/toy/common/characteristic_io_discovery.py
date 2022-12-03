@@ -33,8 +33,8 @@ class CharacteristicIODiscovery(DiscoveryBase):
         return {'characteristic': characteristic}
 
     def _stop_scan(self, scan_state):
-        self._discovery_service.remove(scan_state['characteristic'])
         self._discovery_application.unregister()
+        self._discovery_service.remove(scan_state['characteristic'])
 
     class DiscoveryCharacteristic(Characteristic):
         def __init__(self, uuid, matches_map):

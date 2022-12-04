@@ -36,7 +36,7 @@ class PlaymobilRcRacersRemoteControl(PlaymobilRcRacersBase,
             if not advertisement.connectable:
                 return
 
-            # It looks like a suitable car. Active scans, we could also
+            # It looks like a suitable vehicle. Active scans, we could also
             # contain:
             #    'Complete 128b Services': [self.SERVICE_UUID]
             # in their data. But we're doing passive scans, so we do not

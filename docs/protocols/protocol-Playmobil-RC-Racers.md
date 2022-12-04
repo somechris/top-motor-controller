@@ -1,6 +1,6 @@
 # Playmobil RC Racers communication protocol
 
-This document describes the communication protocol of "Playmobil RC Racers" cars
+This document describes the communication protocol of "Playmobil RC Racers" vehicles
 and remote controls.
 
 
@@ -37,19 +37,19 @@ for:
 
 ## Protocol
 
-The cars start a [BLE advertisement](#advertisements) offering a specific
+The vehicles start a [BLE advertisement](#advertisements) offering a specific
 characteristic. Writing [commands](#commands) to this characteristic controls
-the car.
+the vehicle.
 
 
 
 ### Advertisements
 
-The advertisements of this protocol are done by the car.
+The advertisements of this protocol are done by the vehicle.
 They typically come from Bluetooth addresses starting in `AC:9A:22`, have a
 local name (type `0x09`) starting in `PM-RC `, and characteristic
 `06d1e5e7-79ad-4a71-8faa-373789f7d93c`.
-Writing [commands](#commands) to this characteristic controls the car.
+Writing [commands](#commands) to this characteristic controls the vehicle.
 
 
 
@@ -68,10 +68,10 @@ where `TYPE` can only have the following four values:
 
 | `TYPE` | Gist | Description |
 | --- | --- | --- |
-| `0x23` | speed | `VALUE` controls the speed of the car. `0x00` is full backwards, `0xff` is full forward. Values in between are possible (e.g.: `0xff` is faster forward than `0xb0`). How fast full forward/backward is, can be adjusted through the speed multiplier (see `0x25` below). The dead spot is affected by the speed multiplier as well. It's `0x20-0xd0` for speed multiplier `0x01` down to `0x70-0x90` for speed multiplier `0x05`. The speed set by this command gets reset after ~0.3s. So to keep the car moving, one has to issue this command about 4 times a second. |
+| `0x23` | speed | `VALUE` controls the speed of the vehicle. `0x00` is full backwards, `0xff` is full forward. Values in between are possible (e.g.: `0xff` is faster forward than `0xb0`). How fast full forward/backward is, can be adjusted through the speed multiplier (see `0x25` below). The dead spot is affected by the speed multiplier as well. It's `0x20-0xd0` for speed multiplier `0x01` down to `0x70-0x90` for speed multiplier `0x05`. The speed set by this command gets reset after ~0.3s. So to keep the vehicle moving, one has to issue this command about 4 times a second. |
 | `0x24` | light | If `VALUE` is `0x01`, the light gets turned on. If it is `0x02`, it gets turned off. |
-| `0x25` | speed multiplier | `VALUE` controls how fast the car's full speed (see `0x23` above) is. `0x01` is slowest, `0x05` is fastest. |
-| `0x40` | steering | `VALUE` controls the direction the car steers to. `0x00` turns left, `0xff` turns right. Values in between are possible (`0xf0` steers farther to the right than `0xa0`). There does not seem to be a dead spot (other then the wiggle room of the steering mechanism itself). |
+| `0x25` | speed multiplier | `VALUE` controls how fast the vehicle's full speed (see `0x23` above) is. `0x01` is slowest, `0x05` is fastest. |
+| `0x40` | steering | `VALUE` controls the direction the vehicle steers to. `0x00` turns left, `0xff` turns right. Values in between are possible (`0xf0` steers farther to the right than `0xa0`). There does not seem to be a dead spot (other then the wiggle room of the steering mechanism itself). |
 
 
 

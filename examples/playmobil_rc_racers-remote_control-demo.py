@@ -11,7 +11,7 @@ from toy_motor_controller.toy import PlaymobilRcRacersRemoteControl
 print('Starting toy-motor-controller')
 toy_motor_controller.start()
 
-print('Searching for connectable Playmobil RC Racers cars ...')
+print('Searching for connectable Playmobil RC Racers vehicles ...')
 device = PlaymobilRcRacersRemoteControl().connectFirst()
 
 print(f'Device found, connection established: {device}')

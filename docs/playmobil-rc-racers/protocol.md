@@ -1,49 +1,37 @@
 # Playmobil RC Racers communication protocol
 
-This document describes the communication protocol of "Playmobil RC Racers" vehicles
-and remote controls.
+![Software remote control](images/software-remote-control-100px.jpg)
+![Remote control](images/remote-control-100px.jpg)
+![Vehicle](images/vehicle-100px.jpg)
+
+This document describes the communication protocol of "Playmobil RC Racers",
+which are vehicles, and remote controls.
+
+This document is the basis for the [Playmobil RC Racers implementation in Toy
+Motor Controller](README.md).
 
 
+#### Contents
 
-#### Table of Contents
-
-1. [Supported devices](#supported-devices)
-1. [Protocol](#protocol)
-    1. [Advertisements](#advertisements)
-    1. [Commands](#commands)
+1. [Overview](#overview)
+1. [Advertisements](#advertisements)
+1. [Commands](#commands)
+1. [Related projects](#related-projects)
 1. [Source](#source)
 
 
 
-## Supported devices
 
-This protocol is known to be valid for:
+## Overview
 
-| Name | Link | Last seen on |
-| --- | --- | --- |
-| Playmobil 9089 - RC-Supersport-Racer | https://www.amazon.de/dp/B01M20S3MK | 2022-10-28 |
-| Playmobil:THE MOVIE 70078 Rex Dasher's Porsche Mission E, Ab 6 Jahren  | https://www.amazon.de/dp/B07P7KKCNS | 2022-10-28 |
+The vehicles start a [Bluetooth LE advertisement](#advertisements) offering a specific
+characteristic.
 
-Due to similarity in form and function, this protocol is probably also valid
-for:
-
-| Name | Link | Last seen on |
-| --- | --- | --- |
-| PLAYMOBIL Action 9090 RC-Rocket-Racer mit Bluetooth-Steuerung, Ab 6 Jahren [Exklusiv bei Amazon] | https://www.amazon.de/dp/B01M11HLLM | 2022-10-28 |
-| PLAYMOBIL® 70765 Porsche Mission E | https://www.amazon.de/dp/B08KTNWCWM | 2022-10-28 |
-| Playmobil 9091 - RC-Rock'n'Roll-Racer | https://www.amazon.de/dp/B01LX4TJJJ | 2022-10-28 |
+Writing [commands](#commands) to this characteristic controls the vehicle.
 
 
 
-## Protocol
-
-The vehicles start a [BLE advertisement](#advertisements) offering a specific
-characteristic. Writing [commands](#commands) to this characteristic controls
-the vehicle.
-
-
-
-### Advertisements
+## Advertisements
 
 The advertisements of this protocol are done by the vehicle.
 They typically come from Bluetooth addresses starting in `AC:9A:22`, have a
@@ -53,7 +41,7 @@ Writing [commands](#commands) to this characteristic controls the vehicle.
 
 
 
-### Commands
+## Commands
 
 Each command written to the [protocol's characteristic](#advertisements) is of
 the following form:
@@ -75,6 +63,16 @@ where `TYPE` can only have the following four values:
 
 
 
+## Related projects
+
+* https://github.com/tmonjalo/playmobil-racer
+
+    The basis for our implementation of Playmobil RC Racers remote controls. The project does not support simulating vehicles though.
+
+* https://github.com/doebi/ptpc
+
+    A "tele-presence car" using Playmobil RC Racers. Based on https://github.com/tmonjalo/playmobil-racer
+
 ## Source
 
-The main part got sourced from https://github.com/tmonjalo/playmobil-racer/blob/main/protocol.md .
+The main part got sourced from https://github.com/tmonjalo/playmobil-racer/blob/main/protocol.md

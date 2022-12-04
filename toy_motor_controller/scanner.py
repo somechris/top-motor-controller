@@ -68,6 +68,8 @@ def scan_class(_class):
         print()
         print(f'{main_module}.stop()')
         print('#-----------------------------')
+        print()
+        print()
 
 
 def main():

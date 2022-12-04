@@ -4,13 +4,13 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 
 import toy_motor_controller
-from toy_motor_controller.toy import PlaymobilRacerVehicle
+from toy_motor_controller.toy import PlaymobilRcRacersVehicle
 
 print('Starting toy-motor-controller')
 toy_motor_controller.start()
 
-print('Searching for connectable Playmobil Racer remote controls ...')
-device = PlaymobilRacerVehicle().connectFirst()
+print('Searching for connectable Playmobil RC Racers remote controls ...')
+device = PlaymobilRcRacersVehicle().connectFirst()
 
 print(f'Device found, connection established: {device}')
 

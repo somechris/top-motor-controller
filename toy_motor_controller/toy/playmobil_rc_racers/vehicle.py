@@ -12,7 +12,7 @@ from toy_motor_controller.bus.bluez import get_object_interface
 from toy_motor_controller.bus.bluez import DEVICE_IFACE
 from toy_motor_controller.toy.common import CharacteristicIODiscovery
 
-from . import PlaymobilRacerBase
+from . import PlaymobilRcRacersBase
 
 from toy_motor_controller.util import normalize_mac_address
 
@@ -20,8 +20,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class PlaymobilRacerVehicle(PlaymobilRacerBase, CharacteristicIODiscovery,
-                            AdvertisedApplication):
+class PlaymobilRcRacersVehicle(PlaymobilRcRacersBase,
+                               CharacteristicIODiscovery,
+                               AdvertisedApplication):
     def __init__(self):
         super().__init__()
 

@@ -4,15 +4,15 @@
 
 from .. import __version__
 
-from .base import PlaymobilRacerBase
-from .remote_control import PlaymobilRacerRemoteControl
-from .vehicle import PlaymobilRacerVehicle
+from .base import PlaymobilRcRacersBase
+from .remote_control import PlaymobilRcRacersRemoteControl
+from .vehicle import PlaymobilRcRacersVehicle
 
 
 __all__ = (
-    PlaymobilRacerBase,
-    PlaymobilRacerRemoteControl,
-    PlaymobilRacerVehicle,
+    PlaymobilRcRacersBase,
+    PlaymobilRcRacersRemoteControl,
+    PlaymobilRcRacersVehicle,
     )
 
 __version__ = __version__

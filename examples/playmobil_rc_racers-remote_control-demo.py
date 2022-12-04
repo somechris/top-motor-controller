@@ -6,13 +6,13 @@
 import time
 
 import toy_motor_controller
-from toy_motor_controller.toy import PlaymobilRacerRemoteControl
+from toy_motor_controller.toy import PlaymobilRcRacersRemoteControl
 
 print('Starting toy-motor-controller')
 toy_motor_controller.start()
 
-print('Searching for connectable Playmobil Racer cars ...')
-device = PlaymobilRacerRemoteControl().connectFirst()
+print('Searching for connectable Playmobil RC Racers cars ...')
+device = PlaymobilRcRacersRemoteControl().connectFirst()
 
 print(f'Device found, connection established: {device}')
 

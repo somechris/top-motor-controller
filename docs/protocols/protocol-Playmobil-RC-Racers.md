@@ -1,6 +1,6 @@
-# Playmobil Racer communication protocol
+# Playmobil RC Racers communication protocol
 
-This document describes the communication protocol of "Playmobil Racer" cars
+This document describes the communication protocol of "Playmobil RC Racers" cars
 and remote controls.
 
 

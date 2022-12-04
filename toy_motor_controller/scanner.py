@@ -15,8 +15,8 @@ from . import start, stop, toy
 CLASSES = [
     toy.AkogdPowerFunctionsHub,
     toy.AkogdPowerFunctionsRemoteControl,
-    toy.PlaymobilRacerRemoteControl,
-    toy.PlaymobilRacerVehicle,
+    toy.PlaymobilRcRacersRemoteControl,
+    toy.PlaymobilRcRacersVehicle,
 ]
 
 

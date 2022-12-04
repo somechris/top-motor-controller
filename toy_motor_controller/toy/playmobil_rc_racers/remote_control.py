@@ -10,14 +10,14 @@ from toy_motor_controller.control import uint8_standardized_control
 from toy_motor_controller.toy.common import BluetoothAdvertisementDiscovery
 from toy_motor_controller.util import clamped_int
 
-from . import PlaymobilRacerBase
+from . import PlaymobilRcRacersBase
 
 import logging
 logger = logging.getLogger(__name__)
 
 
-class PlaymobilRacerRemoteControl(PlaymobilRacerBase,
-                                  BluetoothAdvertisementDiscovery):
+class PlaymobilRcRacersRemoteControl(PlaymobilRcRacersBase,
+                                     BluetoothAdvertisementDiscovery):
     # -- Initialization ------------------------------------------------------
 
     def __init__(self):
@@ -120,4 +120,4 @@ class PlaymobilRacerRemoteControl(PlaymobilRacerBase,
             extra = self._remote_address
         else:
             extra = '<unconnected>'
-        return f'PlaymobilRacerRemoteControl({extra})'
+        return f'PlaymobilRcRacersRemoteControl({extra})'

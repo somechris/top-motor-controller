@@ -4,15 +4,15 @@
 
 from .. import __version__
 
-from .device import AkogdPowerFunctionDevice
-from .hub import AkogdPowerFunctionHub
-from .remote_control import AkogdPowerFunctionRemoteControl
+from .device import AkogdPowerFunctionsDevice
+from .hub import AkogdPowerFunctionsHub
+from .remote_control import AkogdPowerFunctionsRemoteControl
 
 
 __all__ = (
-    AkogdPowerFunctionDevice,
-    AkogdPowerFunctionHub,
-    AkogdPowerFunctionRemoteControl,
+    AkogdPowerFunctionsDevice,
+    AkogdPowerFunctionsHub,
+    AkogdPowerFunctionsRemoteControl,
     )
 
 __version__ = __version__

@@ -6,10 +6,10 @@ from toy_motor_controller.control import uint8_standardized_control
 from toy_motor_controller.util import randombyte, bytes_to_hex_string, \
     hex_string_to_bytes
 
-from . import AkogdPowerFunctionDevice
+from . import AkogdPowerFunctionsDevice
 
 
-class AkogdPowerFunctionRemoteControl(AkogdPowerFunctionDevice):
+class AkogdPowerFunctionsRemoteControl(AkogdPowerFunctionsDevice):
 
     # -- Initialization ------------------------------------------------------
 

@@ -7,7 +7,8 @@ from toy_motor_controller.toy.common import BluetoothAdvertisementDiscovery
 from toy_motor_controller.util import bytes_to_hex_string
 
 
-class AkogdPowerFunctionDevice(BluetoothAdvertisementDiscovery, Advertisement):
+class AkogdPowerFunctionsDevice(BluetoothAdvertisementDiscovery,
+                                Advertisement):
 
     # -- Initialization ------------------------------------------------------
 

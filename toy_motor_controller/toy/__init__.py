@@ -4,15 +4,15 @@
 
 from .. import __version__
 
-from .akogd_power_function import AkogdPowerFunctionHub
-from .akogd_power_function import AkogdPowerFunctionRemoteControl
+from .akogd_power_functions import AkogdPowerFunctionsHub
+from .akogd_power_functions import AkogdPowerFunctionsRemoteControl
 from .playmobil_racer import PlaymobilRacerRemoteControl
 from .playmobil_racer import PlaymobilRacerVehicle
 
 
 __all__ = (
-    AkogdPowerFunctionHub,
-    AkogdPowerFunctionRemoteControl,
+    AkogdPowerFunctionsHub,
+    AkogdPowerFunctionsRemoteControl,
     PlaymobilRacerRemoteControl,
     PlaymobilRacerVehicle,
 )

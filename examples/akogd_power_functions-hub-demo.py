@@ -4,13 +4,13 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 
 import toy_motor_controller
-from toy_motor_controller.toy import AkogdPowerFunctionHub
+from toy_motor_controller.toy import AkogdPowerFunctionsHub
 
 print('Starting toy-motor-controller')
 toy_motor_controller.start()
 
-print('Searching for connectable AKOGD Power Function remote controls ...')
-device = AkogdPowerFunctionHub().connectFirst()
+print('Searching for connectable AKOGD Power Functions remote controls ...')
+device = AkogdPowerFunctionsHub().connectFirst()
 
 print(f'Device found, connection established: {device}')
 

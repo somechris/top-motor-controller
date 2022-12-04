@@ -5,10 +5,10 @@
 from toy_motor_controller.util import randombyte, bytes_to_hex_string, \
     hex_string_to_bytes
 
-from . import AkogdPowerFunctionDevice
+from . import AkogdPowerFunctionsDevice
 
 
-class AkogdPowerFunctionHub(AkogdPowerFunctionDevice):
+class AkogdPowerFunctionsHub(AkogdPowerFunctionsDevice):
 
     # -- Initialization ------------------------------------------------------
 

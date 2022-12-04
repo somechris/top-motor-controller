@@ -6,13 +6,13 @@
 import time
 
 import toy_motor_controller
-from toy_motor_controller.toy import AkogdPowerFunctionRemoteControl
+from toy_motor_controller.toy import AkogdPowerFunctionsRemoteControl
 
 print('Starting toy-motor-controller')
 toy_motor_controller.start()
 
-print('Searching for connectable AKOGD Power Function hubs ...')
-device = AkogdPowerFunctionRemoteControl().connectFirst()
+print('Searching for connectable AKOGD Power Functions hubs ...')
+device = AkogdPowerFunctionsRemoteControl().connectFirst()
 
 print(f'Device found, connection established: {device}')
 

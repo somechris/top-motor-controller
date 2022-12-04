@@ -41,6 +41,14 @@ def parse_arguments():
         default=5,
         help='scan duration (in seconds) for each class')
 
+    parser.add_argument(
+        '--ignore-class',
+        default=[],
+        action='append',
+        help='ignore this class when scanning. '
+        'When supplied multiple times, all given classes get inored. '
+        '(See below for supported classes)')
+
     return parser.parse_args()
 
 
@@ -110,7 +118,8 @@ def main(args):
     start()
 
     for _class in classes:
-        scan_class(_class, args)
+        if _class.__name__ not in args.ignore_class:
+            scan_class(_class, args)
 
     stop()
 

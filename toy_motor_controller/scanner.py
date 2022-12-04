@@ -30,12 +30,12 @@ def scan_class(_class):
     instance = _class()
     duration = 5
 
-    print(f'Scanning for {_class.__name__} devices ...')
+    print(f'Letting {_class.__name__} scan for devices to connect to ...')
 
     for match in instance.scan(duration=duration, strip_supplement=False):
         print()
         print()
-        print(f'Found {_class.__name__} device:')
+        print(f'{_class.__name__} found a device to connect to:')
 
         print_dict(match)
         if 'supplement' in match:
@@ -53,7 +53,7 @@ def scan_class(_class):
         import_module = '.'.join(_class.__module__.split(".")[0:2])
         demo_name = ('-'.join(_class.__module__.split(".")[-2:]))
         print()
-        print('You can connect to the device via:')
+        print('Here is a code snippet to connect to the device:')
         print()
         print('#-----------------------------')
         print(f'import {main_module}')

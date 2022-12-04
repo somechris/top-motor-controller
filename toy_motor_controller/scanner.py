@@ -3,6 +3,8 @@
 # GNU Affero General Public License v3.0 only (See LICENSE.txt)
 # SPDX-License-Identifier: AGPL-3.0-only
 
+import argparse
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -18,6 +20,20 @@ CLASSES = [
 ]
 
 
+def parse_arguments():
+    parser = argparse.ArgumentParser(
+        description='Scans for devices supported by toy-motor-controller',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+    parser.add_argument(
+        '--duration',
+        type=float,
+        default=5,
+        help='scan duration (in seconds) for each class')
+
+    return parser.parse_args()
+
+
 def print_dict(d):
     keys = (list(d.keys()))
     keys.sort()
@@ -26,9 +42,9 @@ def print_dict(d):
             print(f'  {key}: {d[key]}')
 
 
-def scan_class(_class):
+def scan_class(_class, args):
     instance = _class()
-    duration = 5
+    duration = args.duration
 
     print(f'Letting {_class.__name__} scan for devices to connect to ...')
 
@@ -72,14 +88,15 @@ def scan_class(_class):
         print()
 
 
-def main():
+def main(args):
     start()
 
     for _class in CLASSES:
-        scan_class(_class)
+        scan_class(_class, args)
 
     stop()
 
 
 if __name__ == '__main__':
-    main()
+    args = parse_arguments()
+    main(args)

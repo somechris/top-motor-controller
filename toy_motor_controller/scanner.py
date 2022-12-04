@@ -86,6 +86,7 @@ def scan_class(_class, args):
         main_module = _class.__module__.split(".")[0]
         import_module = '.'.join(_class.__module__.split(".")[0:2])
         demo_name = ('-'.join(_class.__module__.split(".")[-2:]))
+        demo_name = demo_name.replace('_', '-')
         print()
         print('Here is a code snippet to connect to the device:')
         print()

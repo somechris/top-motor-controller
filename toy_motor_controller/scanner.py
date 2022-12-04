@@ -29,8 +29,10 @@ def parse_arguments():
 
     parser.add_argument(
         '--class',
-        default=None,
+        default=[],
+        action='append',
         help='scan only for this class instead of all supported classes. '
+        'When supplied multiple times, all given classes get scanned. '
         '(See below for supported classes)')
 
     parser.add_argument(
@@ -97,12 +99,12 @@ def scan_class(_class, args):
 
 
 def main(args):
-    class_name = vars(args)['class']
-    if class_name is None:
+    class_names = vars(args)['class']
+    if not class_names:
         classes = CLASSES
     else:
         classes = [candidate for candidate in CLASSES
-                   if candidate.__name__ == class_name
+                   if candidate.__name__ in class_names
                    ]
 
     start()

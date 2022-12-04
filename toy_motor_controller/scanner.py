@@ -21,9 +21,17 @@ CLASSES = [
 
 
 def parse_arguments():
+    supported_classes = ',\n '.join([class_.__name__ for class_ in CLASSES])
     parser = argparse.ArgumentParser(
-        description='Scans for devices supported by toy-motor-controller',
+        description='Scans for devices supported by toy-motor-controller. ',
+        epilog=f'The following classes are supported: {supported_classes}',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+    parser.add_argument(
+        '--class',
+        default=None,
+        help='scan only for this class instead of all supported classes. '
+        '(See below for supported classes)')
 
     parser.add_argument(
         '--duration',
@@ -89,9 +97,17 @@ def scan_class(_class, args):
 
 
 def main(args):
+    class_name = vars(args)['class']
+    if class_name is None:
+        classes = CLASSES
+    else:
+        classes = [candidate for candidate in CLASSES
+                   if candidate.__name__ == class_name
+                   ]
+
     start()
 
-    for _class in CLASSES:
+    for _class in classes:
         scan_class(_class, args)
 
     stop()

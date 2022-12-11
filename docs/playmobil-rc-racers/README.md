@@ -57,6 +57,14 @@ as setting them via keywords does not have the desired effect (this needs some
 more investigation) and setting them via data works, we resort to this hack for
 now.
 
+Also note that once hardware remote controls connect to a vehicle, they remember
+that vehicle's bluetooth address and will only connect to that very vehicle. To
+allow hardware remote controls to connect to other vehicles (like a vehicle
+simulated by `toy-motor-controller`) you either need to fake your bluetooth
+address to match the bluetooth address that the hardware remote control last
+connected to, or you need to [reset the hardware remote
+control](protocol.md#resetting-hardware-remote-controls).
+
 
 
 # Compatible Devices

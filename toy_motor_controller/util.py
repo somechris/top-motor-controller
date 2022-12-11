@@ -4,6 +4,7 @@
 
 import collections.abc
 import random
+import threading
 
 import logging
 logger = logging.getLogger(__name__)
@@ -108,3 +109,19 @@ def dict_get_int_or_None(obj, key):
         return None
 
     return int(obj[key])
+
+
+THREAD_COUNT = {}
+
+
+def NamedThread(name, target, args, daemon):
+    try:
+        count = THREAD_COUNT[name]
+        disambiguator = f"-{count}"
+    except KeyError:
+        count = 0
+        disambiguator = ''
+    THREAD_COUNT[name] = count + 1
+    name += disambiguator
+    return threading.Thread(name=name, target=target,  # no-thread-check
+                            args=args, daemon=daemon)

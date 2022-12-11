@@ -8,6 +8,7 @@ import time
 from bluepy import btle
 
 from . import ScannedAdvertisement
+from toy_motor_controller.util import NamedThread
 
 import logging
 logger = logging.getLogger(__name__)
@@ -24,7 +25,9 @@ class Scanner(object):
         self._backend_needs_restart = False
         self._callbacks = []
 
-        threading.Thread(target=self._scan, args=(), daemon=True).start()
+        name = f"bluez-scanner/{'passive' if self._passive else 'active'}"
+        NamedThread(name=name, target=self._scan, args=(),
+                    daemon=True).start()
 
     def _start_backend(self):
         with self._backend_lock:

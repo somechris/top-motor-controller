@@ -2,8 +2,9 @@
 # GNU Affero General Public License v3.0 only (See LICENSE.txt)
 # SPDX-License-Identifier: AGPL-3.0-only
 
-import threading
 import time
+
+from toy_motor_controller.util import NamedThread
 
 
 def resending_control(interval=1):
@@ -18,7 +19,8 @@ def resending_control(interval=1):
                     _setter(_instance, _value)
                 time.sleep(interval)
 
-        threading.Thread(target=resender, args=(), daemon=True).start()
+        NamedThread(name="resender", target=resender, args=(),
+                    daemon=True).start()
 
         def setter_and_updater(instance, value):
             nonlocal _instance

@@ -14,3 +14,4 @@ set -o pipefail
 
 maintenance/check-headers.sh
 maintenance/check-versions.sh
+maintenance/check-named-threads.sh

@@ -2,10 +2,10 @@
 # GNU Affero General Public License v3.0 only (See LICENSE.txt)
 # SPDX-License-Identifier: AGPL-3.0-only
 
-import threading
-
 import dbus.mainloop.glib
 from gi.repository import GLib
+
+from .util import NamedThread
 
 MAINLOOP = None
 
@@ -18,7 +18,8 @@ def start():
 
         MAINLOOP = GLib.MainLoop()
 
-        threading.Thread(target=MAINLOOP.run, args=(), daemon=True).start()
+        NamedThread(name="glib-mainloop", target=MAINLOOP.run, args=(),
+                    daemon=True).start()
 
     return MAINLOOP
 

@@ -57,7 +57,7 @@ class DiscoveryBase(object):
 
     # -- Connecting ----------------------------------------------------------
 
-    def connectFirst(self):
+    def connectFirst(self, duration=10):
         scan_result = self.scan(first=True)
         if scan_result is None:
             raise RuntimeError('Failed to find connectable device')

@@ -27,18 +27,31 @@ class AkogdPowerFunctionsRemoteControl(AkogdPowerFunctionsDevice):
 
         def callback(advertisement):
             m = advertisement.data.get('Manufacturer', '')
-            if len(m) == 42 and m.startswith(self._magic_str + '05'):
-                # It's a hub wanting to sync with some remote controller
-                if m[14:].startswith(needle):
-                    # It's a hub wanting to sync with us \o/
-                    H = hex_string_to_bytes(m[8:14])
-                    matches_map[advertisement.address] = {
-                        'H': H,
-                        'supplement': {
-                            'advertisement': advertisement,
-                            'key': -advertisement.rssi,
-                            }
-                        }
+
+            if not self.is_valid_advertisement_data(m):
+                return
+
+            # Advertisement data matches protocol requirements
+
+            if not m.startswith(self._magic_str + '05'):
+                return
+
+            # It's a hub wanting to sync with some remote controller
+
+            if not m[14:].startswith(needle):
+                return
+
+            # It's a hub wanting to sync with us \o/
+            # We record the match.
+            H = hex_string_to_bytes(m[8:14])
+            matches_map[advertisement.address] = {
+                'H': H,
+                'supplement': {
+                    'advertisement': advertisement,
+                    'key': -advertisement.rssi,
+                    }
+                }
+
         return callback
 
     def connect(self, H):

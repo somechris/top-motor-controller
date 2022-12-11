@@ -28,17 +28,29 @@ class AkogdPowerFunctionsHub(AkogdPowerFunctionsDevice):
 
         def callback(advertisement):
             m = advertisement.data.get('Manufacturer', '')
-            if len(m) == 42 and m.startswith(required_start):
-                if m[7:14] in required_continuations:
-                    # It's an unpeered remote control.
-                    R = hex_string_to_bytes(m[14:20])
-                    matches_map[advertisement.address] = {
-                        'R': R,
-                        'supplement': {
-                            'advertisement': advertisement,
-                            'key': -advertisement.rssi,
-                            }
-                        }
+
+            if not self.is_valid_advertisement_data(m):
+                return
+
+            # Advertisement data matches protocol requirements
+
+            if not m.startswith(required_start):
+                return
+
+            if m[7:14] not in required_continuations:
+                return
+
+            # It's an unpeered remote control.
+            # We record the match.
+            R = hex_string_to_bytes(m[14:20])
+            matches_map[advertisement.address] = {
+                'R': R,
+                'supplement': {
+                    'advertisement': advertisement,
+                    'key': -advertisement.rssi,
+                    }
+                }
+
         return callback
 
     def connect(self, R):
@@ -77,13 +89,25 @@ class AkogdPowerFunctionsHub(AkogdPowerFunctionsDevice):
 
     def _connected_scan_callback(self, advertisement):
         m = advertisement.data.get('Manufacturer', '')
-        advertisement_start = m[0:20]
-        if advertisement_start in self._expected_advertisement_starts:
-            self.unadvertise()
-            raw_scanned_state = m[20:28]
-            if self._raw_scanned_state != raw_scanned_state:
-                self._raw_scanned_state = raw_scanned_state
-                self._process_raw_scanned_state_change(raw_scanned_state)
+
+        if not self.is_valid_advertisement_data(m):
+            return
+
+        if m[0:20] not in self._expected_advertisement_starts:
+            return
+
+        # The advertisement is valid and is for us
+
+        self.unadvertise()
+
+        raw_scanned_state = m[20:28]
+        if self._raw_scanned_state == raw_scanned_state:
+            # State did not yet change. So there is nothing to do.
+            return
+
+        # State changed
+        self._raw_scanned_state = raw_scanned_state
+        self._process_raw_scanned_state_change(raw_scanned_state)
 
     def _process_raw_scanned_state_change(self, raw_scanned_state):
         parsed = hex_string_to_bytes(raw_scanned_state)

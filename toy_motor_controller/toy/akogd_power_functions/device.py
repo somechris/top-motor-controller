@@ -4,7 +4,8 @@
 
 from toy_motor_controller.bus.bluez import Advertisement
 from toy_motor_controller.toy.common import BluetoothAdvertisementDiscovery
-from toy_motor_controller.util import bytes_to_hex_string
+from toy_motor_controller.util import bytes_to_hex_string, \
+    hex_string_to_bytes
 
 
 class AkogdPowerFunctionsDevice(BluetoothAdvertisementDiscovery,
@@ -13,6 +14,7 @@ class AkogdPowerFunctionsDevice(BluetoothAdvertisementDiscovery,
     # -- Initialization ------------------------------------------------------
 
     def __init__(self):
+        self._checksum_magic = 0xe9
         self._magic = [0x00, 0x00, 0x67]
         self._magic_str = bytes_to_hex_string(self._magic)
         self._connection_state = 0
@@ -29,12 +31,22 @@ class AkogdPowerFunctionsDevice(BluetoothAdvertisementDiscovery,
         data = self._magic + [self._connection_state] + self._H + self._R \
             + self._M + self._Z
 
-        checksum = 0xe9
+        checksum = self._checksum_magic
         for b in data:
             checksum ^= b
         data += [checksum]
 
         self._set_manufacturer_data(data)
+
+    def is_valid_advertisement_data(self, advertisement_data):
+        if len(advertisement_data) != 42:
+            return False
+
+        checksum = self._checksum_magic
+        for b in hex_string_to_bytes(advertisement_data):
+            checksum ^= b
+
+        return not checksum
 
     def connect(self):
         self._rebuild_data()

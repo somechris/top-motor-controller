@@ -80,6 +80,12 @@ class Scanner(object):
         self._callbacks.remove(callback)
 
     def _receiveAdvertisement(self, advertisement):
+        # bluepy caches entries and prefers to only update them. To avoid
+        # re-using scanned entries in a subsequent scan (and hence
+        # maybe get stale data if devices rotate advertisements), we clear
+        # the scanner after each scanned entry.
+        self._backend.clear()
+
         for callback in self._callbacks:
             callback(advertisement)
 
